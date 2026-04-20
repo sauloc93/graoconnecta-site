@@ -527,9 +527,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);displ
       <a href="#solucoes" class="nav-link">Soluções</a>
       <a href="#como-fazemos" class="nav-link">Como Fazemos</a>
       <a href="#simulador" class="nav-link">Simulador</a>
-      <a href="#" onclick="GC.showLogin();return false;" class="nav-link">Calculadora</a>
+      <a href="#" data-gc="login" class="nav-link">Calculadora</a>
       <a href="#quem-atendemos" class="nav-link">Quem Atendemos</a>
-      <a href="#" onclick="GC.showLogin();return false;" class="nav-cta" style="margin-right:6px;background:#4A8C3F">Acessar Plataforma</a><a href="#contato" class="nav-cta">Fale Conosco</a>
+      <a href="#" data-gc="login" class="nav-cta" style="margin-right:6px;background:#4A8C3F">Acessar Plataforma</a><a href="#contato" class="nav-cta">Fale Conosco</a>
     </div>
     <button class="nav-mob" id="mobBtn"><span></span><span></span><span></span></button>
   </nav>
@@ -537,7 +537,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);displ
     <a href="#solucoes">Soluções</a>
     <a href="#como-fazemos">Como Fazemos</a>
     <a href="#simulador">Simulador</a>
-    <a href="#" onclick="GC.showLogin();return false;">Calculadora</a>
+    <a href="#" data-gc="login">Calculadora</a>
     <a href="#quem-atendemos">Quem Atendemos</a>
     <a href="#contato">Fale Conosco</a>
   </div>
@@ -552,7 +552,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);displ
         <h1 class="hero-title">Financiamento privado para o <em>futuro do agronegócio</em></h1>
         <p class="hero-sub">Auxiliamos produtores rurais, cooperativas, revendas e agroindústrias a estruturar operações financeiras sob medida — conectando o agro ao mercado de capitais.</p>
         <div class="hero-btns">
-          <a href="#simulador" class="btn-primary">Simular minha operação</a><a href="#" onclick="GC.showLogin();return false;" class="btn-outline" style="display:inline-block;margin-left:8px">⬤ Acessar Plataforma</a>
+          <a href="#simulador" class="btn-primary">Simular minha operação</a><a href="#" data-gc="login" class="btn-outline" style="display:inline-block;margin-left:8px">⬤ Acessar Plataforma</a>
           <a href="#solucoes" class="btn-outline">Conhecer soluções</a>
         </div>
         <div class="hero-stats">
@@ -921,7 +921,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);displ
       <div class="footer-col">
         <div class="footer-col-title">Plataforma</div>
         <a href="#simulador">Simulador de Propostas</a>
-        <a href="#" onclick="GC.showLogin();return false;">Calculadora B3</a>
+        <a href="#" data-gc="login">Calculadora B3</a>
         <a href="#como-fazemos">Como Fazemos</a>
         <a href="#quem-atendemos">Quem Atendemos</a>
       </div>
@@ -2242,6 +2242,18 @@ function changeContract() {
 
 // ── INIT ──────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',function(){
+  // Event delegation for platform access - NOT stripped by Netlify
+  document.addEventListener('click',function(e){
+    var el=e.target;
+    while(el&&el!==document){
+      if(el.getAttribute&&el.getAttribute('data-gc')==='login'){
+        e.preventDefault();
+        GC.showLogin();
+        return;
+      }
+      el=el.parentNode;
+    }
+  });
   if(sessionStorage.getItem('gc_user')){GC.showPlatform();}else{GC.showSite();}
 });
 window.GC=GC;window.doLogin=doLogin;window.togglePass=togglePass;window.logout=logout;
