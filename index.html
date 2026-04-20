@@ -1,0 +1,2260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GrãoConnecta — Financiamento e Inteligência para o Agronegócio</title>
+<meta name="description" content="Financiamento privado e análise de commodities agrícolas na B3.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+#gc-site{display:block}
+#gc-login{display:none;position:fixed;inset:0;z-index:8000;background:#F5FAF0;overflow-y:auto}
+#gc-platform{display:none;position:fixed;inset:0;z-index:9000;background:#F5F7F2;flex-direction:column;overflow:hidden}
+
+/* ═══════════════════════════════════════════════
+   GRÃO CONNECTA v2 — Light Agro Theme
+   ═══════════════════════════════════════════════ */
+:root {
+  --green:       #2D6A2D;
+  --green-mid:   #4A8C3F;
+  --green-light: #7AB648;
+  --green-pale:  #EBF4E3;
+  --green-ghost: #F5FAF0;
+  --gold:        #C8922A;
+  --gold-light:  #F5E6C8;
+  --earth:       #6B4F2A;
+  --text:        #1A2010;
+  --text-mid:    #3D4D2E;
+  --text-muted:  #6B7A5C;
+  --text-hint:   #9BAA8C;
+  --border:      #D8E5CC;
+  --border-mid:  #C0D4AE;
+  --bg:          #FFFFFF;
+  --bg-soft:     #F8FAF5;
+  --bg-pale:     #F0F5EA;
+  --radius:      8px;
+  --radius-lg:   14px;
+  --radius-xl:   20px;
+  --shadow-sm:   0 1px 4px rgba(45,106,45,0.08);
+  --shadow:      0 4px 20px rgba(45,106,45,0.10);
+  --shadow-lg:   0 12px 40px rgba(45,106,45,0.14);
+  --font-head:   'Playfair Display', serif;
+  --font-body:   'Inter', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.65;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%}
+input,select,button,textarea{font-family:var(--font-body)}
+
+/* ── UTILS ─────────────────────────────────────── */
+.container{max-width:1160px;margin:0 auto;padding:0 2rem}
+.tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--green-mid);background:var(--green-pale);border:1px solid var(--border-mid);border-radius:100px;padding:4px 14px;margin-bottom:1.25rem}
+.section-title{font-family:var(--font-head);font-size:clamp(1.8rem,3.5vw,2.75rem);font-weight:700;color:var(--text);line-height:1.2;margin-bottom:1rem}
+.section-sub{font-size:16px;color:var(--text-muted);max-width:560px;line-height:1.75}
+.text-center{text-align:center}
+.text-center .section-sub{margin:0 auto}
+
+/* ── HEADER ─────────────────────────────────────── */
+.header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);transition:box-shadow .3s}
+.header.scrolled{box-shadow:var(--shadow)}
+.nav{max-width:1160px;margin:0 auto;padding:0 2rem;height:68px;display:flex;align-items:center;gap:1.5rem}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo-icon{width:38px;height:38px;background:var(--green);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.logo-text{font-family:var(--font-head);font-size:18px;color:var(--text);font-weight:700}
+.logo-text span{color:var(--green)}
+.nav-links{display:flex;align-items:center;gap:4px;margin-left:auto}
+.nav-link{padding:7px 14px;font-size:14px;color:var(--text-muted);border-radius:var(--radius);transition:all .2s;font-weight:500}
+.nav-link:hover{color:var(--green);background:var(--green-ghost)}
+.nav-link.active{color:var(--green)}
+.nav-cta{padding:9px 20px;font-size:14px;font-weight:600;background:var(--green);color:#fff;border-radius:var(--radius);margin-left:.5rem;transition:all .2s}
+.nav-cta:hover{background:var(--green-mid);transform:translateY(-1px)}
+.nav-mob{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;margin-left:auto}
+.nav-mob span{display:block;width:22px;height:2px;background:var(--text-muted);border-radius:2px}
+.mob-menu{display:none;flex-direction:column;padding:1rem 2rem 1.5rem;border-top:1px solid var(--border);background:#fff}
+.mob-menu.open{display:flex}
+.mob-menu a{padding:10px 0;font-size:15px;color:var(--text-muted);border-bottom:1px solid var(--border)}
+.mob-menu a:last-child{color:var(--green);font-weight:600;border:none}
+
+/* ── HERO ────────────────────────────────────────── */
+.hero{padding:9rem 0 5rem;background:var(--bg);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;right:-10%;width:60%;height:100%;background:var(--green-ghost);border-radius:0 0 0 80px;z-index:0}
+.hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--green-mid);background:var(--green-pale);border:1px solid var(--border-mid);border-radius:100px;padding:6px 14px;margin-bottom:1.5rem;font-weight:500}
+.dot-live{width:7px;height:7px;background:var(--green-light);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-title{font-family:var(--font-head);font-size:clamp(2.2rem,4.5vw,3.75rem);font-weight:700;line-height:1.1;color:var(--text);margin-bottom:1.5rem}
+.hero-title em{color:var(--green);font-style:normal}
+.hero-sub{font-size:17px;color:var(--text-muted);line-height:1.75;margin-bottom:2rem;max-width:480px}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-primary{display:inline-block;padding:13px 28px;background:var(--green);color:#fff;font-weight:600;font-size:15px;border-radius:var(--radius);border:none;cursor:pointer;transition:all .2s}
+.btn-primary:hover{background:var(--green-mid);transform:translateY(-2px);box-shadow:var(--shadow)}
+.btn-outline{display:inline-block;padding:13px 28px;background:transparent;color:var(--green);font-weight:600;font-size:15px;border-radius:var(--radius);border:2px solid var(--green);cursor:pointer;transition:all .2s}
+.btn-outline:hover{background:var(--green-pale)}
+.hero-visual{position:relative}
+.hero-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-xl);padding:2rem;box-shadow:var(--shadow-lg)}
+.hero-card-title{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);font-weight:600;margin-bottom:1.25rem}
+.solution-list{display:flex;flex-direction:column;gap:.75rem}
+.solution-item{display:flex;align-items:center;gap:12px;padding:.85rem 1rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-lg);cursor:pointer;transition:all .2s}
+.solution-item:hover{border-color:var(--green-mid);background:var(--green-ghost)}
+.sol-icon{width:36px;height:36px;border-radius:var(--radius);background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.sol-name{font-size:14px;font-weight:600;color:var(--text)}
+.sol-desc{font-size:12px;color:var(--text-muted)}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem}
+.hstat{text-align:center;padding:1rem;background:var(--green-ghost);border-radius:var(--radius-lg)}
+.hstat-val{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--green)}
+.hstat-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em}
+
+/* ── HOW IT WORKS ────────────────────────────────── */
+.how{padding:5rem 0;background:var(--bg-soft);border-top:1px solid var(--border)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3rem}
+.step-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-xl);padding:2rem;position:relative;transition:all .2s}
+.step-card:hover{border-color:var(--border-mid);box-shadow:var(--shadow);transform:translateY(-3px)}
+.step-num{width:40px;height:40px;background:var(--green);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-weight:700;font-size:16px;margin-bottom:1.25rem}
+.step-card h3{font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--text);margin-bottom:.75rem}
+.step-card p{font-size:14px;color:var(--text-muted);line-height:1.7}
+
+/* ── SOLUTIONS ───────────────────────────────────── */
+.solutions{padding:5rem 0;border-top:1px solid var(--border)}
+.sol-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:3rem}
+.sol-card{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-xl);padding:1.75rem;transition:all .2s;cursor:default}
+.sol-card:hover{border-color:var(--green-mid);box-shadow:var(--shadow);background:#fff}
+.sol-card-icon{font-size:2rem;margin-bottom:1rem}
+.sol-card h3{font-family:var(--font-head);font-size:17px;font-weight:700;color:var(--text);margin-bottom:.6rem}
+.sol-card p{font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:1rem}
+.sol-tags{display:flex;flex-wrap:wrap;gap:6px}
+.sol-tag{font-size:11px;padding:3px 10px;border-radius:100px;background:var(--green-pale);color:var(--green-mid);border:1px solid var(--border)}
+
+/* ── SIMULATOR ───────────────────────────────────── */
+.simulator{padding:5rem 0;background:var(--green-ghost);border-top:1px solid var(--border)}
+.sim-shell{background:#fff;border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-lg);margin-top:3rem}
+.sim-header{background:var(--green);padding:1.5rem 2rem;display:flex;align-items:center;gap:1rem}
+.sim-header h3{font-family:var(--font-head);font-size:20px;font-weight:700;color:#fff}
+.sim-header p{font-size:13px;color:rgba(255,255,255,0.75);margin-top:2px}
+.sim-steps{display:flex;align-items:center;gap:0;padding:1.25rem 2rem;border-bottom:1px solid var(--border);background:var(--bg-soft);overflow-x:auto}
+.sim-step-btn{display:flex;align-items:center;gap:8px;padding:8px 16px;border:none;background:none;cursor:pointer;font-family:var(--font-body);font-size:13px;font-weight:500;color:var(--text-muted);border-radius:var(--radius);transition:all .2s;white-space:nowrap}
+.sim-step-btn.active{background:var(--green-pale);color:var(--green);border:1px solid var(--border-mid)}
+.sim-step-num{width:24px;height:24px;border-radius:50%;background:var(--border);color:var(--text-muted);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sim-step-btn.active .sim-step-num{background:var(--green);color:#fff}
+.sim-step-btn.done .sim-step-num{background:var(--green-light);color:#fff}
+.sim-arrow{color:var(--border);margin:0 4px;font-size:16px}
+.sim-body{padding:2rem}
+.sim-tab{display:none}
+.sim-tab.active{display:block}
+.sim-grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
+.sim-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.25rem}
+.field{margin-bottom:1rem}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px;color:var(--text);background:#fff;transition:border-color .2s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--green-mid)}
+.field textarea{resize:vertical;min-height:80px}
+.field-note{font-size:11px;color:var(--text-hint);margin-top:4px}
+.sim-result{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.25rem}
+.sim-result-title{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);font-weight:600;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid var(--border)}
+.sim-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.sim-metric{text-align:center}
+.sm-val{font-family:var(--font-head);font-size:1.3rem;font-weight:700;color:var(--green)}
+.sm-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+.sim-nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border)}
+.btn-sim-back{padding:9px 20px;border:1.5px solid var(--border);background:transparent;border-radius:var(--radius);font-size:14px;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all .2s}
+.btn-sim-back:hover{border-color:var(--green);color:var(--green)}
+.btn-sim-next{padding:9px 24px;background:var(--green);color:#fff;border:none;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-sim-next:hover{background:var(--green-mid)}
+.alert-success{background:var(--green-pale);border:1px solid var(--border-mid);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1rem;text-align:center}
+.alert-success h4{font-family:var(--font-head);font-size:20px;color:var(--green);margin-bottom:.5rem}
+.alert-success p{font-size:14px;color:var(--text-muted)}
+
+/* ── TRADING CALC (exclusive tab) ──────────────────── */
+.trading{padding:5rem 0;border-top:1px solid var(--border)}
+.trading-shell{background:#fff;border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow);margin-top:3rem}
+.trading-header{background:var(--bg-soft);border-bottom:1px solid var(--border);padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1rem}
+.trading-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.ttab{padding:7px 16px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:13px;font-weight:500;color:var(--text-muted);background:transparent;cursor:pointer;transition:all .2s}
+.ttab.active{background:var(--green);color:#fff;border-color:var(--green)}
+.trading-body{display:grid;grid-template-columns:200px 1fr;min-height:520px}
+.trading-side{background:var(--bg-soft);border-right:1px solid var(--border);padding:1.25rem 1rem}
+.t-side-label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-hint);font-weight:600;padding:0 .5rem;margin-bottom:.5rem}
+.t-side-nav{display:flex;flex-direction:column;gap:2px;margin-bottom:1.5rem}
+.tsnav{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--radius);border:none;background:transparent;cursor:pointer;font-size:13px;color:var(--text-muted);font-family:var(--font-body);text-align:left;width:100%;transition:all .2s}
+.tsnav:hover{background:var(--green-ghost);color:var(--green)}
+.tsnav.active{background:var(--green-pale);color:var(--green);border:1px solid var(--border)}
+.t-comm-select{margin-top:auto}
+.t-comm-label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-hint);font-weight:600;padding:0 .5rem;margin-bottom:.5rem}
+.t-comm-select select{width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text);background:#fff}
+.trading-main{padding:1.75rem;overflow:auto}
+.t-tab{display:none}
+.t-tab.active{display:block}
+.t-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem}
+.t-title{font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--text)}
+.t-sub{font-size:13px;color:var(--text-muted)}
+.pos-pill{padding:5px 14px;border-radius:100px;font-size:12px;font-weight:700;letter-spacing:.05em}
+.pos-compra{background:#E8F5E3;color:#2D6A2D;border:1px solid #B8DBA8}
+.pos-venda{background:#FDE8E8;color:#C0392B;border:1px solid #F5B8B8}
+.t-grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.t-card{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem}
+.t-card-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);font-weight:600;margin-bottom:.85rem;padding-bottom:.6rem;border-bottom:1px solid var(--border)}
+.t-field{margin-bottom:.65rem}
+.t-field label{display:block;font-size:12px;color:var(--text-muted);margin-bottom:3px}
+.t-field input,.t-field select{width:100%;padding:7px 10px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text);background:#fff;transition:border-color .2s}
+.t-field input:focus,.t-field select:focus{outline:none;border-color:var(--green-mid)}
+.t-field-2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.65rem}
+.t-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1rem}
+.t-metric{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-lg);padding:.85rem;text-align:center}
+.t-metric.hl{background:var(--green-pale);border-color:var(--border-mid)}
+.tm-val{font-family:var(--font-head);font-size:1.1rem;font-weight:700;color:var(--text)}
+.tm-val.pos{color:var(--green)}
+.tm-val.neg{color:#C0392B}
+.tm-label{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-top:2px}
+.t-detail{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem}
+.t-detail-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);font-weight:600;margin-bottom:.75rem}
+.t-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
+.t-row:last-child{border:none}
+.t-row span:first-child{color:var(--text-muted)}
+.t-row-val{font-weight:600;color:var(--text)}
+.t-row-val.pos{color:var(--green)}
+.t-row-val.neg{color:#C0392B}
+.btn-clear-t{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border:1.5px solid var(--border);border-radius:var(--radius);color:var(--text-muted);font-size:12px;background:transparent;cursor:pointer;transition:all .2s}
+.btn-clear-t:hover{border-color:#C0392B;color:#C0392B}
+.cen-table{width:100%;border-collapse:collapse;font-size:13px}
+.cen-table th{text-align:left;padding:7px 6px;color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);font-weight:600}
+.cen-table td{padding:7px 6px;border-bottom:1px solid var(--border)}
+.sg-bar{height:8px;background:var(--bg-pale);border-radius:4px;overflow:hidden;margin:8px 0}
+.sg-fill{height:100%;border-radius:4px;transition:width .4s}
+
+/* ── WHO WE SERVE ────────────────────────────────── */
+.who{padding:5rem 0;background:var(--bg-soft);border-top:1px solid var(--border)}
+.who-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;margin-top:3rem}
+.who-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-xl);padding:1.75rem;text-align:center;transition:all .2s}
+.who-card:hover{border-color:var(--green-mid);box-shadow:var(--shadow);transform:translateY(-3px)}
+.who-icon{font-size:2.5rem;margin-bottom:1rem}
+.who-card h3{font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--text);margin-bottom:.5rem}
+.who-card p{font-size:13px;color:var(--text-muted);line-height:1.65}
+
+/* ── CTA BAND ────────────────────────────────────── */
+.cta-band{padding:5rem 0;background:var(--green);border-top:1px solid rgba(255,255,255,.1)}
+.cta-inner{display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+.cta-band h2{font-family:var(--font-head);font-size:clamp(1.6rem,3vw,2.25rem);font-weight:700;color:#fff}
+.cta-band p{font-size:16px;color:rgba(255,255,255,.8);margin-top:.5rem}
+.btn-white{padding:13px 28px;background:#fff;color:var(--green);font-weight:700;font-size:15px;border-radius:var(--radius);border:none;cursor:pointer;transition:all .2s;display:inline-block}
+.btn-white:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.15)}
+
+/* ── CONTACT ─────────────────────────────────────── */
+.contact{padding:5rem 0;border-top:1px solid var(--border)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin-top:3rem}
+.contact-form{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-xl);padding:2rem}
+.contact-form h3{font-family:var(--font-head);font-size:20px;font-weight:700;color:var(--text);margin-bottom:1.5rem}
+.contact-info{display:flex;flex-direction:column;gap:1.5rem}
+.ci-item{display:flex;gap:1rem;align-items:flex-start}
+.ci-icon{width:44px;height:44px;background:var(--green-pale);border:1px solid var(--border);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ci-label{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:3px}
+.ci-val{font-size:15px;color:var(--text);font-weight:500}
+
+/* ── FOOTER ──────────────────────────────────────── */
+.footer{background:var(--text);padding:3.5rem 0 2rem}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+.footer-brand p{font-size:14px;color:rgba(255,255,255,.5);line-height:1.7;margin-top:.75rem}
+.footer-col-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.4);margin-bottom:1rem}
+.footer-col a{display:block;font-size:14px;color:rgba(255,255,255,.6);padding:4px 0;transition:color .2s}
+.footer-col a:hover{color:#fff}
+.footer-bottom{display:flex;justify-content:space-between;padding-top:2rem;border-top:1px solid rgba(255,255,255,.1);font-size:12px;color:rgba(255,255,255,.3);flex-wrap:wrap;gap:.5rem}
+.footer-logo-text{font-family:var(--font-head);font-size:20px;color:#fff;font-weight:700}
+.footer-logo-text span{color:var(--green-light)}
+
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media(max-width:960px){
+  .hero-inner,.contact-grid{grid-template-columns:1fr}
+  .hero::before{display:none}
+  .steps,.sol-grid{grid-template-columns:1fr 1fr}
+  .who-grid{grid-template-columns:1fr 1fr}
+  .trading-body{grid-template-columns:1fr}
+  .trading-side{display:flex;gap:.5rem;flex-wrap:wrap;border-right:none;border-bottom:1px solid var(--border)}
+  .t-comm-select{display:none}
+  .sim-metrics,.t-metrics{grid-template-columns:1fr 1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .nav-links{display:none}
+  .nav-mob{display:flex}
+}
+@media(max-width:600px){
+  .steps,.sol-grid,.who-grid{grid-template-columns:1fr}
+  .sim-grid2,.sim-grid3,.t-grid2{grid-template-columns:1fr}
+  .hero-stats{grid-template-columns:1fr 1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .t-metrics{grid-template-columns:1fr 1fr}
+  .sim-metrics{grid-template-columns:1fr 1fr}
+}
+
+
+:root{
+  --green:#2D6A2D;--green-mid:#4A8C3F;--green-light:#7AB648;--green-pale:#EBF4E3;
+  --border:#D8E5CC;--text:#1A2010;--text-muted:#6B7A5C;--bg:#F8FAF5;
+  --shadow:0 8px 32px rgba(45,106,45,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;display:flex;flex-direction:column}
+.login-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem;min-height:100vh}
+.login-card{background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);width:100%;max-width:420px;overflow:hidden}
+.login-header{background:var(--green);padding:2.5rem 2rem 2rem;text-align:center}
+.login-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:1rem}
+.login-logo-icon{width:44px;height:44px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center}
+.login-logo-text{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#fff}
+.login-logo-text span{color:#A8D857}
+.login-subtitle{font-size:13px;color:rgba(255,255,255,0.75);letter-spacing:.02em}
+.login-body{padding:2rem}
+.login-title{font-size:17px;font-weight:600;color:var(--text);margin-bottom:.4rem}
+.login-desc{font-size:13px;color:var(--text-muted);margin-bottom:1.75rem;line-height:1.6}
+.field{margin-bottom:1.1rem}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.field input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;color:var(--text);background:#fff;transition:border-color .2s;font-family:'Inter',sans-serif}
+.field input:focus{outline:none;border-color:var(--green-mid)}
+.field-pass{position:relative}
+.field-pass input{padding-right:44px}
+.eye-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:16px;padding:2px}
+.login-btn{width:100%;padding:12px;background:var(--green);color:#fff;font-size:15px;font-weight:600;border:none;border-radius:9px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;margin-top:.5rem}
+.login-btn:hover{background:var(--green-mid);transform:translateY(-1px)}
+.login-error{display:none;background:#FEE;border:1px solid #FCC;border-radius:8px;padding:10px 14px;font-size:13px;color:#C0392B;margin-bottom:1rem;text-align:center}
+.login-error.show{display:block}
+.login-footer{text-align:center;padding:1.25rem;border-top:1px solid var(--border);font-size:12px;color:var(--text-muted)}
+.login-footer a{color:var(--green);font-weight:500}
+.demo-hint{background:var(--green-pale);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--text-muted);margin-bottom:1.25rem;line-height:1.6}
+.demo-hint strong{color:var(--green);font-weight:600}
+
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+
+:root{
+  --green:#2D6A2D;--green-mid:#4A8C3F;--green-light:#7AB648;--green-pale:#EBF4E3;--green-ghost:#F5FAF0;
+  --gold:#C8922A;--red:#C0392B;--red-pale:#FEE8E8;
+  --border:#D8E5CC;--border-mid:#C0D4AE;
+  --text:#1A2010;--text-mid:#3D4D2E;--text-muted:#6B7A5C;--text-hint:#9BAA8C;
+  --bg:#F5F7F2;--surface:#FFFFFF;--surface2:#F8FAF5;
+  --sidebar-w:220px;--header-h:60px;
+  --shadow-sm:0 1px 4px rgba(0,0,0,0.06);--shadow:0 4px 16px rgba(0,0,0,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column}
+
+/* ── TOP BAR ── */
+.topbar{height:var(--header-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1.5rem;gap:1rem;flex-shrink:0;z-index:50}
+.topbar-logo{display:flex;align-items:center;gap:8px;font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--text);text-decoration:none;flex-shrink:0}
+.topbar-logo-dot{width:28px;height:28px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.topbar-logo span{color:var(--green)}
+.topbar-divider{width:1px;height:28px;background:var(--border);flex-shrink:0}
+.topbar-title{font-size:13px;color:var(--text-muted);font-weight:500}
+.topbar-spacer{flex:1}
+.live-badge{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--green-mid);background:var(--green-pale);border:1px solid var(--border);border-radius:100px;padding:4px 12px;font-weight:500}
+.live-dot{width:7px;height:7px;background:var(--green-light);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.user-chip{display:flex;align-items:center;gap:8px;padding:6px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:100px;cursor:pointer;transition:all .2s}
+.user-chip:hover{border-color:var(--border-mid)}
+.user-avatar{width:28px;height:28px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
+.user-name{font-size:13px;font-weight:500;color:var(--text)}
+.logout-btn{padding:6px 14px;border:1px solid var(--border);border-radius:8px;background:transparent;font-size:12px;color:var(--text-muted);cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.logout-btn:hover{border-color:var(--red);color:var(--red)}
+
+/* ── LAYOUT ── */
+.app-layout{display:flex;flex:1;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar-section{padding:.75rem .75rem .25rem}
+.sidebar-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-hint);padding:0 .5rem;margin-bottom:.4rem}
+.snav{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;border:none;background:transparent;cursor:pointer;font-size:13px;color:var(--text-muted);font-family:'Inter',sans-serif;text-align:left;width:100%;transition:all .2s;font-weight:500}
+.snav:hover{background:var(--green-ghost);color:var(--green)}
+.snav.active{background:var(--green-pale);color:var(--green);border:1px solid var(--border)}
+.snav-icon{width:18px;text-align:center;font-size:14px;flex-shrink:0}
+.sidebar-divider{height:1px;background:var(--border);margin:.5rem .75rem}
+
+/* CONTRACT SELECTOR */
+.contract-box{padding:.75rem;margin:.5rem;background:var(--green-pale);border:1px solid var(--border-mid);border-radius:12px}
+.contract-box-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--green-mid);margin-bottom:.5rem}
+.contract-select{width:100%;padding:8px 10px;border:1.5px solid var(--border-mid);border-radius:8px;font-size:13px;color:var(--text);background:#fff;font-family:'Inter',sans-serif;cursor:pointer}
+.contract-select:focus{outline:none;border-color:var(--green)}
+.contract-info{margin-top:.6rem;display:flex;flex-direction:column;gap:3px}
+.ci-row{display:flex;justify-content:space-between;font-size:11px}
+.ci-row span:first-child{color:var(--text-muted)}
+.ci-row span:last-child{font-weight:600;color:var(--text)}
+/* QUICK PICK */
+.quick-pick{padding:5px 4px;border:1.5px solid var(--border);border-radius:7px;background:#fff;font-size:11px;font-weight:600;color:var(--text-muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;text-align:center}
+.quick-pick:hover{border-color:var(--green-mid);color:var(--green);background:var(--green-ghost)}
+.quick-pick.active{border-color:var(--green);color:var(--green);background:#fff;box-shadow:0 0 0 2px rgba(45,106,45,0.12)}
+/* TICKER SEARCH BAR (dashboard top) */
+.ticker-bar{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.25rem;margin-bottom:1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.ticker-bar-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);white-space:nowrap}
+.ticker-input-wrap{position:relative;flex:1;min-width:180px;max-width:260px}
+.ticker-input-wrap input{width:100%;padding:9px 42px 9px 14px;border:1.5px solid var(--border-mid);border-radius:9px;font-size:14px;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--text);background:#fff;transition:border-color .2s}
+.ticker-input-wrap input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(45,106,45,0.08)}
+.ticker-input-wrap input::placeholder{font-family:'Inter',sans-serif;font-weight:400;color:var(--text-hint)}
+.ticker-go-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:var(--green);border:none;border-radius:7px;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.ticker-go-btn:hover{background:var(--green-mid)}
+.ticker-quick{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.ticker-qbtn{padding:6px 12px;border:1.5px solid var(--border);border-radius:100px;background:#fff;font-size:12px;font-weight:600;color:var(--text-muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap}
+.ticker-qbtn:hover{border-color:var(--green-mid);color:var(--green)}
+.ticker-qbtn.active{border-color:var(--green);color:var(--green);background:var(--green-pale)}
+.ticker-manual{display:flex;gap:6px;align-items:center;margin-left:auto;flex-wrap:wrap}
+.ticker-manual input{padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;color:var(--text);background:#fff;width:130px}
+.ticker-manual input:focus{outline:none;border-color:var(--green-mid)}
+.ticker-analyze-btn{padding:8px 18px;background:var(--green);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:background .2s}
+.ticker-analyze-btn:hover{background:var(--green-mid)}
+
+/* ── MAIN CONTENT ── */
+.main{flex:1;overflow-y:auto;padding:1.25rem}
+.page{display:none}
+.page.active{display:block}
+
+/* ── GRID LAYOUTS ── */
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1rem}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1rem}
+.grid-chart{display:grid;grid-template-columns:2fr 1fr;gap:1rem;margin-bottom:1rem}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.25rem}
+.card-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);margin-bottom:.85rem;padding-bottom:.6rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title-left{display:flex;align-items:center;gap:8px}
+
+/* ── METRIC CARDS ── */
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem}
+.metric-card.green{background:var(--green-pale);border-color:var(--border-mid)}
+.metric-card.red{background:#FEE8E8;border-color:#F5B8B8}
+.mc-label{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);margin-bottom:4px;font-weight:600}
+.mc-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--text);line-height:1}
+.mc-val.pos{color:var(--green)}
+.mc-val.neg{color:var(--red)}
+.mc-sub{font-size:11px;color:var(--text-muted);margin-top:4px}
+
+/* ── SIGNAL BADGE ── */
+.signal{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:100px;font-size:12px;font-weight:700;letter-spacing:.04em}
+.signal-compra{background:#E3F5DA;color:#1A5C1A;border:1px solid #A8D88A}
+.signal-venda{background:#FEE8E8;color:#8B1A1A;border:1px solid #F5A8A8}
+.signal-neutro{background:#FFF8E7;color:#7A5C00;border:1px solid #E8CC80}
+
+/* ── INDICATORS ── */
+.indi-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+.indi-row:last-child{border:none}
+.indi-name{color:var(--text-muted);font-weight:500}
+.indi-val{font-weight:600;font-family:'JetBrains Mono',monospace;font-size:13px}
+.indi-signal{font-size:11px;padding:2px 8px;border-radius:100px;font-weight:600}
+.indi-s-alta{background:#E3F5DA;color:#1A5C1A}
+.indi-s-baixa{background:#FEE8E8;color:#8B1A1A}
+.indi-s-neutro{background:#F5F5F0;color:#6B7A5C}
+
+/* ── CCI GAUGE ── */
+.cci-gauge{position:relative;text-align:center;padding:1rem 0}
+.cci-value-big{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;line-height:1}
+.cci-label{font-size:12px;color:var(--text-muted);margin-top:4px;font-weight:500}
+.cci-bar{height:12px;background:linear-gradient(90deg,#C0392B 0%,#E67E22 20%,#27AE60 40%,#27AE60 60%,#E67E22 80%,#C0392B 100%);border-radius:6px;position:relative;margin:1rem 0 .5rem}
+.cci-marker{position:absolute;top:-4px;width:4px;height:20px;background:var(--text);border-radius:2px;transform:translateX(-50%);transition:left .5s}
+.cci-scale{display:flex;justify-content:space-between;font-size:10px;color:var(--text-hint);font-family:'JetBrains Mono',monospace}
+
+/* ── CHART ── */
+.chart-wrap{position:relative;height:280px}
+.chart-wrap-sm{position:relative;height:180px}
+
+/* ── TABLE ── */
+.data-table{width:100%;border-collapse:collapse;font-size:13px}
+.data-table th{text-align:left;padding:8px 10px;color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em;border-bottom:1px solid var(--border);font-weight:600;background:var(--surface2)}
+.data-table td{padding:9px 10px;border-bottom:1px solid var(--border)}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:var(--green-ghost)}
+.td-mono{font-family:'JetBrains Mono',monospace;font-size:12px}
+.td-pos{color:var(--green);font-weight:600}
+.td-neg{color:var(--red);font-weight:600}
+
+/* ── REPORT ── */
+.report-header{background:var(--green);border-radius:12px;padding:1.5rem;color:#fff;margin-bottom:1rem}
+.report-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:.5rem}
+.report-meta{font-size:13px;color:rgba(255,255,255,.75);display:flex;gap:1.5rem;flex-wrap:wrap}
+.report-section{margin-bottom:1.5rem}
+.report-section h4{font-size:14px;font-weight:600;color:var(--text);margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.report-section p{font-size:14px;color:var(--text-muted);line-height:1.75}
+.report-bullets{list-style:none;display:flex;flex-direction:column;gap:.5rem;margin-top:.75rem}
+.report-bullets li{font-size:13px;color:var(--text-muted);line-height:1.6;padding-left:1.25rem;position:relative}
+.report-bullets li::before{content:'▸';position:absolute;left:0;color:var(--green);font-size:10px;top:3px}
+.report-justification{background:var(--green-pale);border:1px solid var(--border-mid);border-radius:10px;padding:1rem 1.25rem}
+.rj-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--green-mid);margin-bottom:.5rem}
+.rj-text{font-size:14px;color:var(--text-mid);line-height:1.75}
+
+/* ── HISTORY FILTERS ── */
+.filters{display:flex;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center}
+.filter-select{padding:7px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);background:#fff;font-family:'Inter',sans-serif;cursor:pointer}
+.filter-select:focus{outline:none;border-color:var(--green)}
+.filter-badge{padding:6px 14px;border:1.5px solid var(--border);border-radius:100px;font-size:12px;color:var(--text-muted);background:#fff;cursor:pointer;transition:all .2s;font-weight:500}
+.filter-badge.active{background:var(--green-pale);color:var(--green);border-color:var(--border-mid)}
+
+/* ── PAGE HEADER ── */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem}
+.page-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text)}
+.page-sub{font-size:13px;color:var(--text-muted);margin-top:2px}
+.page-actions{display:flex;gap:.5rem}
+.btn-sm{padding:7px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-weight:500;color:var(--text-muted);background:#fff;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.btn-sm:hover{border-color:var(--green);color:var(--green)}
+.btn-sm-green{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-sm-green:hover{background:var(--green-mid);color:#fff}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+@media(max-width:900px){
+  .sidebar{display:none}
+  .grid-4{grid-template-columns:1fr 1fr}
+  .grid-chart{grid-template-columns:1fr}
+  .grid-3{grid-template-columns:1fr}
+}
+
+</style>
+</head>
+<body>
+<div id="gc-site"><!-- HEADER -->
+<header class="header" id="header">
+  <nav class="nav">
+    <a href="#" class="logo">
+      <div class="logo-icon">
+        <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+          <path d="M16 3C16 3 9 9 9 17C9 21.4 12.1 25 16 25C19.9 25 23 21.4 23 17C23 12.6 19.9 9 16 9" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+          <circle cx="16" cy="29" r="2" fill="white"/>
+          <path d="M16 25V27" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="logo-text">Grão<span>Connecta</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="#solucoes" class="nav-link">Soluções</a>
+      <a href="#como-fazemos" class="nav-link">Como Fazemos</a>
+      <a href="#simulador" class="nav-link">Simulador</a>
+      <a href="#" onclick="GC.showLogin();return false;" class="nav-link">Calculadora</a>
+      <a href="#quem-atendemos" class="nav-link">Quem Atendemos</a>
+      <a href="#" onclick="GC.showLogin();return false;" class="nav-cta" style="margin-right:6px;background:#4A8C3F">Acessar Plataforma</a><a href="#contato" class="nav-cta">Fale Conosco</a>
+    </div>
+    <button class="nav-mob" id="mobBtn"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mob-menu" id="mobMenu">
+    <a href="#solucoes">Soluções</a>
+    <a href="#como-fazemos">Como Fazemos</a>
+    <a href="#simulador">Simulador</a>
+    <a href="#" onclick="GC.showLogin();return false;">Calculadora</a>
+    <a href="#quem-atendemos">Quem Atendemos</a>
+    <a href="#contato">Fale Conosco</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-tag"><span class="dot-live"></span>Financiamento Privado · Mercado de Capitais</div>
+        <h1 class="hero-title">Financiamento privado para o <em>futuro do agronegócio</em></h1>
+        <p class="hero-sub">Auxiliamos produtores rurais, cooperativas, revendas e agroindústrias a estruturar operações financeiras sob medida — conectando o agro ao mercado de capitais.</p>
+        <div class="hero-btns">
+          <a href="#simulador" class="btn-primary">Simular minha operação</a><a href="#" onclick="GC.showLogin();return false;" class="btn-outline" style="display:inline-block;margin-left:8px">⬤ Acessar Plataforma</a>
+          <a href="#solucoes" class="btn-outline">Conhecer soluções</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hstat"><div class="hstat-val">5+</div><div class="hstat-label">Modalidades</div></div>
+          <div class="hstat"><div class="hstat-val">360°</div><div class="hstat-label">Diagnóstico</div></div>
+          <div class="hstat"><div class="hstat-val">FII/FIC</div><div class="hstat-label">Fundos acesso</div></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="hero-card-title">Soluções de financiamento</div>
+          <div class="solution-list">
+            <div class="solution-item" onclick="scrollTo('#solucoes')">
+              <div class="sol-icon">🏡</div>
+              <div><div class="sol-name">Home Equity Rural</div><div class="sol-desc">Imóvel rural como garantia</div></div>
+            </div>
+            <div class="solution-item" onclick="scrollTo('#solucoes')">
+              <div class="sol-icon">🌾</div>
+              <div><div class="sol-name">Farm Equity</div><div class="sol-desc">Capitalização da fazenda</div></div>
+            </div>
+            <div class="solution-item" onclick="scrollTo('#solucoes')">
+              <div class="sol-icon">📄</div>
+              <div><div class="sol-name">Antecipação de Recebíveis</div><div class="sol-desc">CPR, CRA, duplicatas</div></div>
+            </div>
+            <div class="solution-item" onclick="scrollTo('#solucoes')">
+              <div class="sol-icon">📊</div>
+              <div><div class="sol-name">Trading de Grãos</div><div class="sol-desc">Operações estruturadas B3</div></div>
+            </div>
+            <div class="solution-item" onclick="scrollTo('#solucoes')">
+              <div class="sol-icon">🤝</div>
+              <div><div class="sol-name">Consórcio Rural</div><div class="sol-desc">Aquisição planejada de ativos</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="como-fazemos">
+  <div class="container">
+    <div class="text-center">
+      <div class="tag">Como Fazemos</div>
+      <h2 class="section-title">Três etapas para estruturar sua operação</h2>
+      <p class="section-sub">Do diagnóstico à captação — acompanhamos cada passo do processo com expertise em mercado de capitais do agro.</p>
+    </div>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Diagnóstico Completo</h3>
+        <p>Analisamos o perfil financeiro, ativos disponíveis, fluxo de caixa e necessidades de capital do seu negócio para identificar a melhor estrutura de financiamento.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>Recomendações e Estratégia</h3>
+        <p>Definimos a modalidade ideal — home equity, farm equity, recebíveis ou trading — e estruturamos a operação conforme as regras dos fundos de investimento.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>Apresentação aos Investidores</h3>
+        <p>Preparamos o dossiê e apresentamos sua operação diretamente aos gestores de FII, FIC e fundos de crédito privado do agronegócio.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTIONS -->
+<section class="solutions" id="solucoes">
+  <div class="container">
+    <div class="text-center">
+      <div class="tag">Soluções Financeiras</div>
+      <h2 class="section-title">Modalidades de financiamento</h2>
+      <p class="section-sub">Soluções do mercado de capitais estruturadas para cada fase e necessidade da cadeia produtiva do agronegócio.</p>
+    </div>
+    <div class="sol-grid">
+      <div class="sol-card">
+        <div class="sol-card-icon">🏡</div>
+        <h3>Home Equity Rural</h3>
+        <p>Utilize seu imóvel rural como garantia para acessar crédito privado com taxas competitivas. Ideal para capital de giro, expansão e quitação de dívidas mais caras.</p>
+        <div class="sol-tags"><span class="sol-tag">Imóvel como garantia</span><span class="sol-tag">Taxas a partir de CDI+2%</span><span class="sol-tag">Prazo até 20 anos</span></div>
+      </div>
+      <div class="sol-card">
+        <div class="sol-card-icon">🌾</div>
+        <h3>Farm Equity</h3>
+        <p>Capitalização via participação societária ou estruturas de FII. Atrai investidores institucionais para financiar expansão de áreas, maquinário e infraestrutura.</p>
+        <div class="sol-tags"><span class="sol-tag">FII Agro</span><span class="sol-tag">Equity estruturado</span><span class="sol-tag">FIAGRO</span></div>
+      </div>
+      <div class="sol-card">
+        <div class="sol-card-icon">📄</div>
+        <h3>Antecipação de Recebíveis</h3>
+        <p>Antecipe CPR, CRA, duplicatas e contratos de venda futura de grãos. Transforme recebíveis em liquidez imediata através de fundos de crédito privado.</p>
+        <div class="sol-tags"><span class="sol-tag">CPR física/financeira</span><span class="sol-tag">CRA</span><span class="sol-tag">Duplicatas rurais</span></div>
+      </div>
+      <div class="sol-card">
+        <div class="sol-card-icon">📊</div>
+        <h3>Trading de Grãos</h3>
+        <p>Estruturação de operações de compra e venda de grãos com financiamento integrado. Combinamos hedge em futuros B3 com capital de giro para tradings e cooperativas.</p>
+        <div class="sol-tags"><span class="sol-tag">Futuros B3</span><span class="sol-tag">Hedge cambial</span><span class="sol-tag">Capital de giro</span></div>
+      </div>
+      <div class="sol-card">
+        <div class="sol-card-icon">🤝</div>
+        <h3>Consórcio Rural</h3>
+        <p>Aquisição planejada de máquinas, implementos, veículos e imóveis rurais com as menores taxas do mercado. Sem juros, só taxa de administração.</p>
+        <div class="sol-tags"><span class="sol-tag">Máquinas e implementos</span><span class="sol-tag">Imóveis rurais</span><span class="sol-tag">Sem juros</span></div>
+      </div>
+      <div class="sol-card">
+        <div class="sol-card-icon">🏦</div>
+        <h3>Estruturação de CRA/CDCA</h3>
+        <p>Emissão de Certificados de Recebíveis do Agronegócio e CDCA para captação direta no mercado de capitais. Solução para empresas com faturamento acima de R$ 5M.</p>
+        <div class="sol-tags"><span class="sol-tag">CRA</span><span class="sol-tag">CDCA</span><span class="sol-tag">Mercado de capitais</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SIMULATOR -->
+<section class="simulator" id="simulador">
+  <div class="container">
+    <div class="text-center">
+      <div class="tag">Simulador de Propostas</div>
+      <h2 class="section-title">Simule sua operação financeira</h2>
+      <p class="section-sub">Preencha os dados abaixo e receba uma estimativa personalizada para a sua necessidade de financiamento.</p>
+    </div>
+    <div class="sim-shell">
+      <div class="sim-header">
+        <div>
+          <h3>Simulação de Financiamento Agro</h3>
+          <p>Preenchimento em 3 etapas — leva menos de 3 minutos</p>
+        </div>
+      </div>
+      <div class="sim-steps">
+        <button class="sim-step-btn active" id="sstep1" onclick="goSimStep(1)">
+          <span class="sim-step-num">1</span> Perfil e necessidade
+        </button>
+        <span class="sim-arrow">›</span>
+        <button class="sim-step-btn" id="sstep2" onclick="goSimStep(2)">
+          <span class="sim-step-num">2</span> Garantias e ativos
+        </button>
+        <span class="sim-arrow">›</span>
+        <button class="sim-step-btn" id="sstep3" onclick="goSimStep(3)">
+          <span class="sim-step-num">3</span> Resultado da simulação
+        </button>
+      </div>
+      <div class="sim-body">
+
+        <!-- STEP 1 -->
+        <div class="sim-tab active" id="simtab1">
+          <div class="sim-grid2">
+            <div class="field">
+              <label>Tipo de negócio</label>
+              <select id="s-tipo">
+                <option value="">Selecione...</option>
+                <option>Produtor Rural (Pessoa Física)</option>
+                <option>Produtor Rural (Pessoa Jurídica)</option>
+                <option>Cooperativa Agropecuária</option>
+                <option>Revenda de Insumos</option>
+                <option>Agroindústria</option>
+                <option>Trading de Grãos</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Modalidade desejada</label>
+              <select id="s-modalidade" onchange="simCalc()">
+                <option value="">Selecione...</option>
+                <option value="homeequity">Home Equity Rural</option>
+                <option value="farmequity">Farm Equity</option>
+                <option value="recebiveis">Antecipação de Recebíveis</option>
+                <option value="trading">Trading de Grãos</option>
+                <option value="consorcio">Consórcio Rural</option>
+                <option value="cra">Estruturação CRA/CDCA</option>
+              </select>
+            </div>
+          </div>
+          <div class="sim-grid3">
+            <div class="field">
+              <label>Valor necessário (R$)</label>
+              <input type="number" id="s-valor" placeholder="500.000" oninput="simCalc()">
+            </div>
+            <div class="field">
+              <label>Prazo desejado (meses)</label>
+              <input type="number" id="s-prazo" placeholder="36" oninput="simCalc()">
+            </div>
+            <div class="field">
+              <label>Faturamento anual (R$)</label>
+              <input type="number" id="s-fat" placeholder="2.000.000" oninput="simCalc()">
+            </div>
+          </div>
+          <div class="field">
+            <label>Finalidade do crédito</label>
+            <select id="s-finalidade">
+              <option value="">Selecione...</option>
+              <option>Capital de giro safra</option>
+              <option>Aquisição de máquinas e implementos</option>
+              <option>Expansão de área</option>
+              <option>Construção / benfeitorias</option>
+              <option>Quitação de dívidas</option>
+              <option>Expansão da unidade industrial</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div class="sim-nav">
+            <div></div>
+            <button class="btn-sim-next" onclick="goSimStep(2)">Próxima etapa →</button>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="sim-tab" id="simtab2">
+          <div class="sim-grid2">
+            <div class="field">
+              <label>Possui imóvel rural próprio?</label>
+              <select id="s-imovel">
+                <option>Sim, com matrícula</option>
+                <option>Sim, em processo de regularização</option>
+                <option>Não possuo</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Valor estimado do imóvel (R$)</label>
+              <input type="number" id="s-vimovel" placeholder="1.000.000" oninput="simCalc()">
+            </div>
+          </div>
+          <div class="sim-grid2">
+            <div class="field">
+              <label>Área da propriedade (hectares)</label>
+              <input type="number" id="s-area" placeholder="100">
+            </div>
+            <div class="field">
+              <label>Possui recebíveis / contratos futuros?</label>
+              <select id="s-recebiveis">
+                <option>Sim — CPR ou contratos firmados</option>
+                <option>Sim — Duplicatas / notas fiscais</option>
+                <option>Não possuo</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label>Valor dos recebíveis (R$)</label>
+            <input type="number" id="s-vrec" placeholder="300.000" oninput="simCalc()">
+            <div class="field-note">CPR, contratos de venda futura, duplicatas, etc.</div>
+          </div>
+          <div class="field">
+            <label>Histórico de crédito</label>
+            <select id="s-credito">
+              <option>Bom — sem restrições</option>
+              <option>Regular — algumas restrições</option>
+              <option>Comprometido — em reestruturação</option>
+            </select>
+          </div>
+          <div class="sim-nav">
+            <button class="btn-sim-back" onclick="goSimStep(1)">← Voltar</button>
+            <button class="btn-sim-next" onclick="goSimStep(3)">Ver simulação →</button>
+          </div>
+        </div>
+
+        <!-- STEP 3 — RESULT -->
+        <div class="sim-tab" id="simtab3">
+          <div id="sim-result-area"></div>
+          <div class="sim-nav">
+            <button class="btn-sim-back" onclick="goSimStep(2)">← Ajustar dados</button>
+            <a href="#contato" class="btn-sim-next">Falar com especialista →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- WHO WE SERVE -->
+
+<section class="who" id="quem-atendemos">
+  <div class="container">
+    <div class="text-center">
+      <div class="tag">Quem Atendemos</div>
+      <h2 class="section-title">Toda a cadeia produtiva do agro</h2>
+      <p class="section-sub">Do produtor familiar à grande agroindústria — estruturamos soluções financeiras para cada elo da cadeia.</p>
+    </div>
+    <div class="who-grid">
+      <div class="who-card">
+        <div class="who-icon">👨‍🌾</div>
+        <h3>Produtores Rurais</h3>
+        <p>PF e PJ com necessidade de capital de giro safra, expansão de área ou modernização de frota e maquinário.</p>
+      </div>
+      <div class="who-card">
+        <div class="who-icon">🏢</div>
+        <h3>Cooperativas</h3>
+        <p>Cooperativas agropecuárias que precisam de capital para custeio, armazenagem ou expansão da estrutura.</p>
+      </div>
+      <div class="who-card">
+        <div class="who-icon">🏪</div>
+        <h3>Revendas de Insumos</h3>
+        <p>Distribuidores e revendas que necessitam de capital de giro para estoque e barter com produtores.</p>
+      </div>
+      <div class="who-card">
+        <div class="who-icon">🏭</div>
+        <h3>Agroindústrias</h3>
+        <p>Frigoríficos, processadoras, usinas e indústrias de alimentos com projetos de expansão ou capital de giro.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section class="cta-band">
+  <div class="container">
+    <div class="cta-inner">
+      <div>
+        <h2>Pronto para estruturar sua operação?</h2>
+        <p>Fale com nossos especialistas em finanças do agronegócio</p>
+      </div>
+      <a href="#contato" class="btn-white">Iniciar diagnóstico gratuito</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contato">
+  <div class="container">
+    <div class="text-center">
+      <div class="tag">Contato</div>
+      <h2 class="section-title">Fale com um especialista</h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-form">
+        <h3>Envie uma mensagem</h3>
+        <div class="field"><label>Nome completo</label><input type="text" id="c-nome" placeholder="Seu nome"></div>
+        <div class="sim-grid2">
+          <div class="field"><label>Telefone / WhatsApp</label><input type="tel" id="c-tel" placeholder="(00) 00000-0000"></div>
+          <div class="field"><label>E-mail</label><input type="email" id="c-email" placeholder="seu@email.com"></div>
+        </div>
+        <div class="field"><label>Tipo de negócio</label><select id="c-tipo"><option>Produtor Rural</option><option>Cooperativa</option><option>Revenda</option><option>Agroindústria</option><option>Outro</option></select></div>
+        <div class="field"><label>Mensagem</label><textarea id="c-msg" placeholder="Descreva sua necessidade financeira..."></textarea></div>
+        <button class="btn-primary" style="width:100%" onclick="enviarContato()">Enviar mensagem</button>
+        <div id="contact-ok" style="display:none;margin-top:1rem;padding:1rem;background:var(--green-pale);border:1px solid var(--border-mid);border-radius:8px;text-align:center;font-size:14px;color:var(--green)">✓ Mensagem enviada! Retornaremos em até 24 horas.</div>
+      </div>
+      <div class="contact-info">
+        <div class="ci-item"><div class="ci-icon">📧</div><div><div class="ci-label">E-mail</div><div class="ci-val">contato@graoconnecta.com.br</div></div></div>
+        <div class="ci-item"><div class="ci-icon">📱</div><div><div class="ci-label">WhatsApp</div><div class="ci-val">(11) 9 0000-0000</div></div></div>
+        <div class="ci-item"><div class="ci-icon">📍</div><div><div class="ci-label">Localização</div><div class="ci-val">São Paulo, SP — Brasil</div></div></div>
+        <div class="ci-item"><div class="ci-icon">⏰</div><div><div class="ci-label">Horário</div><div class="ci-val">Segunda a sexta, das 8h às 18h</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo-text">Grão<span>Connecta</span></div>
+        <p>Financiamento privado e inteligência de mercado para o agronegócio brasileiro. Conectando produtores ao mercado de capitais.</p>
+        <p style="margin-top:.75rem;font-size:12px;color:rgba(255,255,255,.3)">GRAOCONNECTA.COM.BR</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Soluções</div>
+        <a href="#solucoes">Home Equity Rural</a>
+        <a href="#solucoes">Farm Equity</a>
+        <a href="#solucoes">Antecipação de Recebíveis</a>
+        <a href="#solucoes">Trading de Grãos</a>
+        <a href="#solucoes">Consórcio Rural</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Plataforma</div>
+        <a href="#simulador">Simulador de Propostas</a>
+        <a href="#" onclick="GC.showLogin();return false;">Calculadora B3</a>
+        <a href="#como-fazemos">Como Fazemos</a>
+        <a href="#quem-atendemos">Quem Atendemos</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Legal</div>
+        <a href="#">Termos de Uso</a>
+        <a href="#">Política de Privacidade</a>
+        <a href="#">Aviso de Risco</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 GrãoConnecta. Todos os direitos reservados.</span>
+      <span>As informações não constituem recomendação de investimento.</span>
+    </div>
+  </div>
+</footer></div>
+<div id="gc-login"><div class="login-wrap"><div style="width:100%;max-width:420px"><div class="login-wrap">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="login-logo">
+        <div class="login-logo-icon">
+          <svg width="24" height="24" viewBox="0 0 32 32" fill="none">
+            <path d="M16 3C16 3 9 9 9 17C9 21.4 12.1 25 16 25C19.9 25 23 21.4 23 17C23 12.6 19.9 9 16 9" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+            <circle cx="16" cy="29" r="2" fill="white"/>
+            <path d="M16 25V27" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="login-logo-text">Grão<span>Connecta</span></div>
+      </div>
+      <div class="login-subtitle">Plataforma de Análise · Mercado de Commodities</div>
+    </div>
+    <div class="login-body">
+      <div class="login-title">Acesso restrito</div>
+      <div class="login-desc">Entre com suas credenciais para acessar o painel de análise técnica e gestão de risco.</div>
+      <div class="demo-hint">
+        <strong>Acesso demonstração:</strong><br>
+        Usuário: <strong>trader@graoconnecta.com.br</strong><br>
+        Senha: <strong>Grao@2026</strong>
+      </div>
+      <div class="login-error" id="loginError">Usuário ou senha incorretos. Tente novamente.</div>
+      <div class="field">
+        <label>E-mail</label>
+        <input type="email" id="loginEmail" placeholder="seu@email.com.br" autocomplete="email">
+      </div>
+      <div class="field">
+        <label>Senha</label>
+        <div class="field-pass">
+          <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+          <button class="eye-btn" onclick="togglePass()" id="eyeBtn">👁</button>
+        </div>
+      </div>
+      <button class="login-btn" onclick="doLogin()">Entrar na plataforma</button>
+    </div>
+    <div class="login-footer">
+      Problemas de acesso? <a href="mailto:contato@graoconnecta.com.br">contato@graoconnecta.com.br</a>
+    </div>
+  </div>
+</div></div></div></div>
+<div id="gc-platform"><!-- TOP BAR -->
+<div class="topbar">
+  <a href="index.html" class="topbar-logo">
+    <div class="topbar-logo-dot">
+      <svg width="18" height="18" viewBox="0 0 32 32" fill="none">
+        <path d="M16 3C16 3 9 9 9 17C9 21.4 12.1 25 16 25C19.9 25 23 21.4 23 17C23 12.6 19.9 9 16 9" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="16" cy="29" r="2" fill="white"/>
+        <path d="M16 25V27" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    Grão<span>Connecta</span>
+  </a>
+  <div class="topbar-divider"></div>
+  <div class="topbar-title">Plataforma de Análise · Mercado de Commodities</div>
+  <div class="topbar-spacer"></div>
+  <div class="live-badge"><span class="live-dot"></span>Mercado simulado</div>
+  <div class="user-chip" id="userChip">
+    <div class="user-avatar" id="userAvatar">TS</div>
+    <div class="user-name" id="userName">Trader Sênior</div>
+  </div>
+  <button class="logout-btn" onclick="logout()">Sair</button>
+</div>
+
+<!-- APP LAYOUT -->
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Análise</div>
+      <button class="snav active" data-page="dashboard" onclick="showPage('dashboard')">
+        <span class="snav-icon">📊</span> Dashboard
+      </button>
+      <button class="snav" data-page="analise" onclick="showPage('analise')">
+        <span class="snav-icon">📈</span> Análise Técnica
+      </button>
+      <button class="snav" data-page="indicadores" onclick="showPage('indicadores')">
+        <span class="snav-icon">🔬</span> Indicadores
+      </button>
+      <button class="snav" data-page="relatorio" onclick="showPage('relatorio')">
+        <span class="snav-icon">📄</span> Relatório de Posição
+      </button>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Operações</div>
+      <button class="snav" data-page="historico" onclick="showPage('historico')">
+        <span class="snav-icon">🗂</span> Histórico
+      </button>
+      <button class="snav" data-page="risco" onclick="showPage('risco')">
+        <span class="snav-icon">🛡</span> Gestão de Risco
+      </button>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="contract-box">
+      <div class="contract-box-label">Inserir contrato</div>
+
+      <!-- TICKER INPUT -->
+      <div style="position:relative;margin-bottom:.5rem">
+        <input type="text" id="tickerInput" placeholder="Ex: CCMN26" maxlength="8"
+          style="width:100%;padding:8px 36px 8px 10px;border:1.5px solid var(--border-mid);border-radius:8px;font-size:13px;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--text);background:#fff;text-transform:uppercase"
+          oninput="this.value=this.value.toUpperCase()"
+          onkeydown="if(event.key==='Enter')analisarTicker()">
+        <button onclick="analisarTicker()" title="Analisar"
+          style="position:absolute;right:4px;top:50%;transform:translateY(-50%);background:var(--green);border:none;border-radius:6px;width:26px;height:26px;cursor:pointer;display:flex;align-items:center;justify-content:center">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <!-- QUICK PICKS -->
+      <div style="font-size:10px;color:var(--text-hint);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.35rem">Contratos ativos B3</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:.6rem">
+        <button class="quick-pick active" id="qp-CCM" onclick="quickPick('CCM')">🌽 CCM</button>
+        <button class="quick-pick" id="qp-BGI" onclick="quickPick('BGI')">🐂 BGI</button>
+        <button class="quick-pick" id="qp-ICF" onclick="quickPick('ICF')">☕ ICF</button>
+        <button class="quick-pick" id="qp-SJC" onclick="quickPick('SJC')">🫘 SJC</button>
+      </div>
+
+      <!-- MANUAL PRICE INPUT -->
+      <div style="font-size:10px;color:var(--text-hint);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.35rem">Dados manuais (opcional)</div>
+      <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:.5rem">
+        <input type="number" id="manualPrice" placeholder="Preço atual" step="0.01"
+          style="width:100%;padding:7px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:12px;font-family:'Inter',sans-serif;color:var(--text);background:#fff">
+        <input type="text" id="manualVenc" placeholder="Vencimento (ex: JUL/26)"
+          style="width:100%;padding:7px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:12px;font-family:'Inter',sans-serif;color:var(--text);background:#fff">
+      </div>
+      <button onclick="analisarTicker()"
+        style="width:100%;padding:8px;background:var(--green);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:background .2s"
+        onmouseover="this.style.background='var(--green-mid)'" onmouseout="this.style.background='var(--green)'">
+        ▶ Analisar contrato
+      </button>
+
+      <!-- ERROR MSG -->
+      <div id="ticker-error" style="display:none;margin-top:.4rem;font-size:11px;color:var(--red);text-align:center"></div>
+
+      <!-- CONTRACT INFO -->
+      <div class="contract-info" id="contractInfo" style="margin-top:.75rem;padding-top:.6rem;border-top:1px solid var(--border-mid)">
+        <div class="ci-row"><span>Ticker</span><span id="ci-ticker" style="font-family:'JetBrains Mono',monospace;color:var(--green)">—</span></div>
+        <div class="ci-row"><span>Commodity</span><span id="ci-name">—</span></div>
+        <div class="ci-row"><span>Vencimento</span><span id="ci-venc">—</span></div>
+        <div class="ci-row"><span>Último</span><span id="ci-ult">—</span></div>
+        <div class="ci-row"><span>Variação</span><span id="ci-var">—</span></div>
+        <div class="ci-row"><span>Volume</span><span id="ci-vol">—</span></div>
+        <div class="ci-row"><span>Tamanho</span><span id="ci-size">—</span></div>
+        <div class="ci-row"><span>Margem</span><span id="ci-marg">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main" id="mainContent">
+
+    <!-- ═══ DASHBOARD ═══ -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Dashboard de Mercado</div>
+          <div class="page-sub" id="dash-subtitle">Visão geral · Milho CCM</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn-sm" onclick="showPage('relatorio')">📄 Gerar Relatório</button>
+          <button class="btn-sm btn-sm-green" onclick="showPage('analise')">📈 Ver Análise</button>
+        </div>
+      </div>
+
+      <!-- TICKER BAR -->
+      <div class="ticker-bar">
+        <div class="ticker-bar-label">Contrato</div>
+        <div class="ticker-input-wrap">
+          <input type="text" id="tickerBarInput" placeholder="Digite o ticker (ex: CCMN26)"
+            maxlength="10" oninput="this.value=this.value.toUpperCase()"
+            onkeydown="if(event.key==='Enter')analisarTicker()">
+          <button class="ticker-go-btn" onclick="analisarTicker()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+        <div class="ticker-quick">
+          <button class="ticker-qbtn active" id="tqb-CCM" onclick="quickPick('CCM')">🌽 Milho · CCM</button>
+          <button class="ticker-qbtn" id="tqb-BGI" onclick="quickPick('BGI')">🐂 Boi Gordo · BGI</button>
+          <button class="ticker-qbtn" id="tqb-ICF" onclick="quickPick('ICF')">☕ Café · ICF</button>
+          <button class="ticker-qbtn" id="tqb-SJC" onclick="quickPick('SJC')">🫘 Soja · SJC</button>
+        </div>
+        <div class="ticker-manual">
+          <input type="number" id="barManualPrice" placeholder="Preço manual" step="0.01">
+          <input type="text" id="barManualVenc" placeholder="Vencimento" style="width:110px">
+          <button class="ticker-analyze-btn" onclick="analisarTicker()">▶ Analisar</button>
+        </div>
+      </div>
+
+      <!-- METRIC CARDS -->
+      <div class="grid-4">
+        <div class="metric-card" id="mc-preco">
+          <div class="mc-label">Preço atual</div>
+          <div class="mc-val" id="mc-preco-val">—</div>
+          <div class="mc-sub" id="mc-preco-sub">—</div>
+        </div>
+        <div class="metric-card" id="mc-cci">
+          <div class="mc-label">CCI (14)</div>
+          <div class="mc-val" id="mc-cci-val">—</div>
+          <div class="mc-sub" id="mc-cci-sub">—</div>
+        </div>
+        <div class="metric-card" id="mc-mm">
+          <div class="mc-label">MM9 vs MM21</div>
+          <div class="mc-val" id="mc-mm-val">—</div>
+          <div class="mc-sub" id="mc-mm-sub">—</div>
+        </div>
+        <div class="metric-card" id="mc-signal">
+          <div class="mc-label">Sinal consolidado</div>
+          <div class="mc-val" id="mc-signal-val">—</div>
+          <div class="mc-sub" id="mc-signal-sub">—</div>
+        </div>
+      </div>
+
+      <div class="grid-chart">
+        <!-- PRICE CHART -->
+        <div class="card">
+          <div class="card-title">
+            <div class="card-title-left">
+              <span>📈</span> Evolução de preço + Médias Móveis
+            </div>
+            <span id="chart-contract-label" style="font-size:11px;color:var(--green);font-weight:700">CCM</span>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="priceChart"></canvas>
+          </div>
+        </div>
+
+        <!-- CCI PANEL -->
+        <div class="card">
+          <div class="card-title"><span class="card-title-left"><span>🔬</span> CCI (14 períodos)</span></div>
+          <div class="cci-gauge">
+            <div class="cci-value-big" id="cci-big">—</div>
+            <div class="cci-label" id="cci-label">Calculando...</div>
+          </div>
+          <div class="cci-bar">
+            <div class="cci-marker" id="cci-marker" style="left:50%"></div>
+          </div>
+          <div class="cci-scale">
+            <span>-300</span><span>-200</span><span>-100</span><span>0</span><span>+100</span><span>+200</span><span>+300</span>
+          </div>
+          <div style="margin-top:.85rem">
+            <div class="indi-row">
+              <span class="indi-name">Zona</span>
+              <span class="indi-val" id="cci-zone">—</span>
+            </div>
+            <div class="indi-row">
+              <span class="indi-name">Interpretação</span>
+              <span class="indi-signal" id="cci-interp">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CCI CHART -->
+      <div class="card" style="margin-bottom:1rem">
+        <div class="card-title"><span class="card-title-left"><span>📉</span> Oscilador CCI histórico</span></div>
+        <div class="chart-wrap-sm">
+          <canvas id="cciChart"></canvas>
+        </div>
+      </div>
+
+      <!-- INDICATORS + SIGNALS -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title"><span class="card-title-left"><span>📐</span> Indicadores técnicos</span></div>
+          <div class="indi-row">
+            <span class="indi-name">Média Móvel 9</span>
+            <span class="indi-val" id="ind-mm9">—</span>
+          </div>
+          <div class="indi-row">
+            <span class="indi-name">Média Móvel 21</span>
+            <span class="indi-val" id="ind-mm21">—</span>
+          </div>
+          <div class="indi-row">
+            <span class="indi-name">Tendência MM</span>
+            <span class="indi-signal" id="ind-tend">—</span>
+          </div>
+          <div class="indi-row">
+            <span class="indi-name">CCI (14)</span>
+            <span class="indi-val" id="ind-cci">—</span>
+          </div>
+          <div class="indi-row">
+            <span class="indi-name">CCI Zona</span>
+            <span class="indi-signal" id="ind-cci-zona">—</span>
+          </div>
+          <div class="indi-row">
+            <span class="indi-name">Divergência</span>
+            <span class="indi-signal" id="ind-div">—</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="card-title-left"><span>🎯</span> Sinal de operação</span></div>
+          <div style="text-align:center;padding:1rem 0">
+            <div class="signal" id="main-signal" style="font-size:15px;padding:10px 24px;margin:0 auto;display:inline-flex">—</div>
+            <div style="font-size:13px;color:var(--text-muted);margin-top:.85rem;line-height:1.65" id="signal-desc">Aguardando dados do contrato selecionado.</div>
+          </div>
+          <div style="border-top:1px solid var(--border);margin-top:1rem;padding-top:1rem">
+            <div class="indi-row"><span class="indi-name">Stop Loss sugerido</span><span class="indi-val neg" id="sig-sl">—</span></div>
+            <div class="indi-row"><span class="indi-name">Alvo 1</span><span class="indi-val pos" id="sig-t1">—</span></div>
+            <div class="indi-row"><span class="indi-name">Alvo 2</span><span class="indi-val pos" id="sig-t2">—</span></div>
+            <div class="indi-row"><span class="indi-name">Risco/Retorno</span><span class="indi-val" id="sig-rr">—</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ ANÁLISE TÉCNICA ═══ -->
+    <div class="page" id="page-analise">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Análise Técnica</div>
+          <div class="page-sub">Médias móveis, CCI e identificação de tendências</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn-sm btn-sm-green" onclick="showPage('relatorio')">📄 Gerar Relatório</button>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:1rem">
+        <div class="card-title"><span class="card-title-left"><span>📈</span> Gráfico completo — preço + MM9 + MM21</span></div>
+        <div style="height:340px;position:relative"><canvas id="fullChart"></canvas></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title"><span class="card-title-left"><span>📉</span> CCI (14) — Oscilador</span></div>
+          <div style="height:200px;position:relative"><canvas id="cciChart2"></canvas></div>
+          <div style="margin-top:1rem;padding:.85rem;background:var(--surface2);border-radius:8px;font-size:13px;color:var(--text-muted);line-height:1.7" id="cci-explain">
+            O CCI mede o afastamento do preço atual em relação à sua média. Valores acima de +100 indicam sobrecompra; abaixo de -100, sobrevenda. Cruzamentos da linha zero sinalizam mudanças de tendência de curto prazo.
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="card-title-left"><span>🔍</span> Leitura detalhada</span></div>
+          <div class="indi-row"><span class="indi-name">CCI atual</span><span class="indi-val" id="det-cci">—</span></div>
+          <div class="indi-row"><span class="indi-name">Zona de operação</span><span class="indi-signal" id="det-zona">—</span></div>
+          <div class="indi-row"><span class="indi-name">MM9</span><span class="indi-val" id="det-mm9">—</span></div>
+          <div class="indi-row"><span class="indi-name">MM21</span><span class="indi-val" id="det-mm21">—</span></div>
+          <div class="indi-row"><span class="indi-name">Cruzamento MM</span><span class="indi-signal" id="det-cross">—</span></div>
+          <div class="indi-row"><span class="indi-name">Tendência geral</span><span class="indi-signal" id="det-tend">—</span></div>
+          <div class="indi-row"><span class="indi-name">Divergência CCI/Preço</span><span class="indi-signal" id="det-div">—</span></div>
+          <div style="margin-top:1rem;padding:.85rem;background:var(--green-pale);border:1px solid var(--border-mid);border-radius:8px">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--green-mid);margin-bottom:.4rem">Conclusão analítica</div>
+            <div style="font-size:13px;color:var(--text-mid);line-height:1.7" id="det-conclusao">Selecione um contrato para análise.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ INDICADORES ═══ -->
+    <div class="page" id="page-indicadores">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Painel de Indicadores</div>
+          <div class="page-sub">Visão consolidada de todos os ativos monitorados</div>
+        </div>
+      </div>
+      <div class="grid-4" id="indi-cards"></div>
+      <div class="card">
+        <div class="card-title"><span class="card-title-left"><span>📊</span> Matriz de sinais — todos os contratos</span></div>
+        <div style="overflow-x:auto">
+          <table class="data-table" id="sinais-table">
+            <thead><tr>
+              <th>Contrato</th><th>Preço</th><th>Var. %</th>
+              <th>MM9</th><th>MM21</th><th>Tend. MM</th>
+              <th>CCI (14)</th><th>Zona CCI</th><th>Sinal</th>
+            </tr></thead>
+            <tbody id="sinais-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ RELATÓRIO ═══ -->
+    <div class="page" id="page-relatorio">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Relatório de Posição</div>
+          <div class="page-sub">Justificativa analítica para abertura/manutenção de posição</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn-sm" onclick="window.print()">🖨 Imprimir</button>
+        </div>
+      </div>
+      <div id="report-content"></div>
+    </div>
+
+    <!-- ═══ HISTÓRICO ═══ -->
+    <div class="page" id="page-historico">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Histórico de Operações</div>
+          <div class="page-sub">Registro completo de posições abertas e encerradas</div>
+        </div>
+      </div>
+      <div class="grid-4" style="margin-bottom:1rem">
+        <div class="metric-card green"><div class="mc-label">Total operações</div><div class="mc-val">24</div><div class="mc-sub">Desde Jan/2026</div></div>
+        <div class="metric-card green"><div class="mc-label">Resultado acumulado</div><div class="mc-val pos">+R$ 14.820</div><div class="mc-sub">Líquido de custos</div></div>
+        <div class="metric-card"><div class="mc-label">Taxa de acerto</div><div class="mc-val">66,7%</div><div class="mc-sub">16 ganhos / 8 perdas</div></div>
+        <div class="metric-card"><div class="mc-label">Fator de lucro</div><div class="mc-val">2,34</div><div class="mc-sub">Ganho médio / Perda média</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span>🗂</span> Operações registradas</div>
+        <div class="filters">
+          <select class="filter-select" id="hist-contract"><option value="">Todos os contratos</option><option>CCM</option><option>BGI</option><option>ICF</option><option>SJC</option></select>
+          <select class="filter-select" id="hist-result"><option value="">Todos os resultados</option><option value="pos">Ganho</option><option value="neg">Perda</option></select>
+          <button class="filter-badge active" onclick="filterHist('all',this)">Todas</button>
+          <button class="filter-badge" onclick="filterHist('open',this)">Abertas</button>
+          <button class="filter-badge" onclick="filterHist('closed',this)">Encerradas</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr>
+              <th>Data</th><th>Contrato</th><th>Direção</th><th>Entrada</th>
+              <th>Saída</th><th>Qtd</th><th>Resultado</th><th>Status</th><th>Sinal</th>
+            </tr></thead>
+            <tbody id="hist-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ GESTÃO DE RISCO ═══ -->
+    <div class="page" id="page-risco">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Gestão de Risco</div>
+          <div class="page-sub">Dimensionamento e controle de exposição</div>
+        </div>
+      </div>
+      <div class="grid-4" style="margin-bottom:1rem">
+        <div class="metric-card green"><div class="mc-label">Capital alocado</div><div class="mc-val">R$ 50.000</div><div class="mc-sub">Base de cálculo</div></div>
+        <div class="metric-card"><div class="mc-label">Risco/trade</div><div class="mc-val">2%</div><div class="mc-sub">R$ 1.000 máx.</div></div>
+        <div class="metric-card"><div class="mc-label">Exposição atual</div><div class="mc-val">1 contrato</div><div class="mc-sub">CCM — em aberto</div></div>
+        <div class="metric-card"><div class="mc-label">Drawdown máx.</div><div class="mc-val neg">-R$ 2.340</div><div class="mc-sub">Limite: R$ 5.000</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title"><span>⚙️</span> Calculadora de posição</div>
+          <div class="indi-row" style="flex-direction:column;align-items:flex-start;gap:5px;border:none;padding-bottom:.5rem">
+            <label style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em">Capital (R$)</label>
+            <input type="number" id="r-capital" value="50000" oninput="calcRiskPanel()" style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'Inter',sans-serif">
+          </div>
+          <div class="indi-row" style="flex-direction:column;align-items:flex-start;gap:5px;border:none;padding-bottom:.5rem">
+            <label style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em">Risco por trade (%)</label>
+            <input type="number" id="r-riskpct" value="2" step="0.5" oninput="calcRiskPanel()" style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'Inter',sans-serif">
+          </div>
+          <div class="indi-row" style="flex-direction:column;align-items:flex-start;gap:5px;border:none;padding-bottom:.5rem">
+            <label style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em">Stop Loss (%)</label>
+            <input type="number" id="r-sl" value="5" step="0.5" oninput="calcRiskPanel()" style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'Inter',sans-serif">
+          </div>
+          <div class="indi-row" style="flex-direction:column;align-items:flex-start;gap:5px;border:none">
+            <label style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em">Preço entrada</label>
+            <input type="number" id="r-entry" value="83.63" step="0.01" oninput="calcRiskPanel()" style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'Inter',sans-serif">
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span>📊</span> Resultado do dimensionamento</div>
+          <div class="indi-row"><span class="indi-name">Risco $ por trade</span><span class="indi-val" id="rp-rreais">—</span></div>
+          <div class="indi-row"><span class="indi-name">Risco por contrato (CCM)</span><span class="indi-val" id="rp-rcont">—</span></div>
+          <div class="indi-row"><span class="indi-name" style="font-weight:700;color:var(--text)">Contratos ideais</span><span class="indi-val" id="rp-nconts" style="font-size:1.2rem;color:var(--green)">—</span></div>
+          <div class="indi-row"><span class="indi-name">Margem total</span><span class="indi-val" id="rp-marg">—</span></div>
+          <div class="indi-row"><span class="indi-name">% capital em margem</span><span class="indi-val" id="rp-pct">—</span></div>
+          <div class="indi-row"><span class="indi-name">Stop Loss calculado</span><span class="indi-val neg" id="rp-sl">—</span></div>
+          <div class="indi-row"><span class="indi-name">Alvo 1:2 (R/R)</span><span class="indi-val pos" id="rp-alvo">—</span></div>
+          <div id="rp-alav" style="display:none;margin-top:.75rem;padding:10px 14px;background:#FFF8E7;border:1px solid #E8CC80;border-radius:8px;font-size:12px;color:#7A5C00">⚠ Alavancagem elevada — margem supera 30% do capital</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app-layout --></div>
+<script>
+var GC=(function(){
+  function showSite(){
+    document.getElementById('gc-site').style.display='block';
+    document.getElementById('gc-login').style.display='none';
+    document.getElementById('gc-platform').style.display='none';
+    window.scrollTo(0,0);
+  }
+  function showLogin(){
+    document.getElementById('gc-site').style.display='none';
+    document.getElementById('gc-login').style.display='block';
+    document.getElementById('gc-platform').style.display='none';
+    var e=document.getElementById('loginError');if(e)e.classList.remove('show');
+    var p=document.getElementById('loginPass');if(p)p.value='';
+  }
+  var _init=false;
+  function showPlatform(){
+    document.getElementById('gc-site').style.display='none';
+    document.getElementById('gc-login').style.display='none';
+    document.getElementById('gc-platform').style.display='flex';
+    if(!_init){
+      _init=true;
+      var u=sessionStorage.getItem('gc_user');
+      if(!u){showLogin();return;}
+      var usr=JSON.parse(u);
+      var ne=document.getElementById('userName');if(ne)ne.textContent=usr.nome||'Trader';
+      var ae=document.getElementById('userAvatar');if(ae)ae.textContent=(usr.nome||'T').split(' ').map(function(w){return w[0]}).join('').substring(0,2).toUpperCase();
+      var bi=document.getElementById('tickerBarInput');if(bi)bi.value='CCM';
+      var si=document.getElementById('tickerInput');if(si)si.value='CCM';
+      setTimeout(function(){
+        if(typeof updateDashboard==='function')updateDashboard('CCM');
+        if(typeof renderHistory==='function'&&typeof HIST_DATA!=='undefined')renderHistory(HIST_DATA);
+        if(typeof calcRiskPanel==='function')calcRiskPanel();
+      },200);
+    }
+  }
+  return{showSite:showSite,showLogin:showLogin,showPlatform:showPlatform};
+})();
+const USERS=[{email:'trader@graoconnecta.com.br',pass:'Grao@2026',nome:'Trader Sênior',perfil:'Analista'}];
+function togglePass(){
+  const i=document.getElementById('loginPass');
+  i.type=i.type==='password'?'text':'password';
+}
+function doLogin(){
+  const email=document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pass=document.getElementById('loginPass').value;
+  const err=document.getElementById('loginError');
+  const user=USERS.find(u=>u.email===email&&u.pass===pass);
+  if(user){
+    sessionStorage.setItem('gc_user',JSON.stringify(user));
+    GC.showPlatform();
+  } else {
+    err.classList.add('show');
+    document.getElementById('loginPass').value='';
+  }
+}
+document.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+// Check if already logged in
+
+'use strict';
+const CONTRACTS={CCM:{size:450,unit:'sacas',margem:3600},BGI:{size:330,unit:'arrobas',margem:5000},SOJ:{size:450,unit:'sacas',margem:4500},ICF:{size:100,unit:'sacas (60kg)',margem:3000},ACF:{size:508,unit:'arrobas',margem:4000}};
+const CME_F=(2.2046/60)*27.2155;
+const RATES={homeequity:{min:0.12,max:0.18,label:'CDI + 2% a 6% a.a.'},farmequity:{min:0.10,max:0.16,label:'Equity / TIR 10%-16% a.a.'},recebiveis:{min:0.14,max:0.22,label:'CDI + 4% a 8% a.a.'},trading:{min:0.13,max:0.20,label:'CDI + 3% a 7% a.a.'},consorcio:{min:0.12,max:0.14,label:'Taxa adm. 12%-14% total'},cra:{min:0.10,max:0.15,label:'CDI + 1% a 4% a.a.'}};
+
+const el=id=>document.getElementById(id);
+const fmt=(v,d=2)=>'R$ '+parseFloat(v).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const fmtPct=v=>(v*100).toFixed(2).replace('.',',')+('%');
+const sv=id=>parseFloat(el(id)?.value)||0;
+
+// Header scroll
+window.addEventListener('scroll',()=>el('header')?.classList.toggle('scrolled',scrollY>40));
+
+// Mobile menu
+el('mobBtn')?.addEventListener('click',()=>el('mobMenu')?.classList.toggle('open'));
+
+// Smooth scroll for hero items
+function scrollTo(sel){document.querySelector(sel)?.scrollIntoView({behavior:'smooth'})}
+
+// ── SIMULATOR ──────────────────────────────────────
+let simStep=1;
+function goSimStep(n){
+  simStep=n;
+  [1,2,3].forEach(i=>{
+    el('simtab'+i)?.classList.toggle('active',i===n);
+    const btn=el('sstep'+i);
+    if(btn){btn.classList.toggle('active',i===n);btn.classList.toggle('done',i<n)}
+  });
+  if(n===3)renderSimResult();
+}
+
+function simCalc(){
+  const val=sv('s-valor')||500000;
+  const prazo=sv('s-prazo')||36;
+  const mod=el('s-modalidade')?.value||'homeequity';
+  const rate=RATES[mod]||RATES.homeequity;
+  const monthly=rate.min/12;
+  const pmt=prazo>0?val*(monthly*Math.pow(1+monthly,prazo))/(Math.pow(1+monthly,prazo)-1):0;
+  return{val,prazo,pmt,rate,mod};
+}
+
+function renderSimResult(){
+  const{val,prazo,pmt,rate,mod}=simCalc();
+  const total=pmt*prazo;
+  const custo=total-val;
+  const vimovel=sv('s-vimovel')||0;
+  const vrec=sv('s-vrec')||0;
+  const garantia=vimovel+vrec;
+  const ltv=garantia>0?Math.min(val/garantia*100,100):0;
+  const modLabel={homeequity:'Home Equity Rural',farmequity:'Farm Equity',recebiveis:'Antecipação de Recebíveis',trading:'Trading de Grãos',consorcio:'Consórcio Rural',cra:'Estruturação CRA/CDCA'}[mod]||'Financiamento Agro';
+
+  el('sim-result-area').innerHTML=`
+    <div class="sim-result">
+      <div class="sim-result-title">Estimativa — ${modLabel}</div>
+      <div class="sim-metrics">
+        <div class="sim-metric"><div class="sm-val">${fmt(val)}</div><div class="sm-label">Valor solicitado</div></div>
+        <div class="sim-metric"><div class="sm-val">${fmt(pmt)}</div><div class="sm-label">Parcela estimada/mês</div></div>
+        <div class="sim-metric"><div class="sm-val">${prazo} meses</div><div class="sm-label">Prazo</div></div>
+        <div class="sim-metric"><div class="sm-val">${rate.label}</div><div class="sm-label">Taxa indicativa</div></div>
+      </div>
+    </div>
+    <div class="sim-result" style="margin-top:1rem">
+      <div class="sim-result-title">Análise de garantias</div>
+      <div class="sim-metrics">
+        <div class="sim-metric"><div class="sm-val">${fmt(garantia)}</div><div class="sm-label">Total de garantias</div></div>
+        <div class="sim-metric"><div class="sm-val">${ltv.toFixed(0)}%</div><div class="sm-label">LTV (Loan-to-Value)</div></div>
+        <div class="sim-metric"><div class="sm-val">${fmt(custo)}</div><div class="sm-label">Custo total do crédito</div></div>
+        <div class="sim-metric"><div class="sm-val">${ltv<=70?'✅ Viável':'⚠ Avaliar'}</div><div class="sm-label">Elegibilidade</div></div>
+      </div>
+    </div>
+    <div class="alert-success">
+      <h4>Simulação concluída!</h4>
+      <p>Esta é uma estimativa indicativa. Clique em "Falar com especialista" para análise detalhada e proposta personalizada.</p>
+    </div>`;
+}
+
+// ── TRADING CALC ────────────────────────────────────
+function showTTab(name){
+  document.querySelectorAll('.t-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tsnav').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.ttab').forEach(b=>b.classList.remove('active'));
+  el('ttab-'+name)?.classList.add('active');
+  document.querySelectorAll(`.tsnav[data-t="${name}"]`).forEach(b=>b.classList.add('active'));
+  document.querySelectorAll(`.ttab`).forEach(b=>{if(b.textContent.toLowerCase().includes(name.substring(0,4)))b.classList.add('active')});
+  // re-sync ttab buttons by index
+  const map={calc:0,risco:1,spread:2,carry:3};
+  document.querySelectorAll('.ttab').forEach((b,i)=>b.classList.toggle('active',i===map[name]));
+  ({calc:calcular,risco:calcRisco,spread:calcSpread,carry:calcCarry}[name]||(() => {}))();
+}
+
+function applyContract(sym){
+  const info=CONTRACTS[sym];if(!info)return;
+  if(el('tam-cont'))el('tam-cont').value=info.size;
+  if(el('margem'))el('margem').value=info.margem;
+  if(el('unidade'))el('unidade').textContent=info.unit;
+  if(el('tam-risco'))el('tam-risco').value=info.size;
+  calcular();
+}
+
+function updatePos(){
+  const p=el('posicao')?.value||'COMPRA';
+  const pill=el('posPill');if(!pill)return;
+  pill.textContent=p;
+  pill.className='pos-pill '+(p==='COMPRA'?'pos-compra':'pos-venda');
+}
+
+function calcular(){
+  const pos=el('posicao')?.value||'COMPRA';
+  const tam=sv('tam-cont')||450,qtd=sv('qtd')||1,margem=sv('margem')||3600;
+  const entrada=sv('entrada'),saida=sv('saida');
+  const slPct=(sv('stop-pct')||5)/100,sgPct=(sv('gain-pct')||5)/100;
+  const corr=sv('corretagem');
+  if(!entrada)return;
+  const dir=pos==='COMPRA'?1:-1;
+  const resUnit=(saida-entrada)*dir;
+  const resTotal=resUnit*tam*qtd-corr;
+  const margTotal=margem*qtd;
+  const retMarg=margTotal>0?resTotal/margTotal:0;
+  const ganhoPct=entrada>0?(saida-entrada)/entrada*dir:0;
+  const sl=pos==='COMPRA'?entrada*(1-slPct):entrada*(1+slPct);
+  const sg=pos==='COMPRA'?entrada*(1+sgPct):entrada*(1-sgPct);
+  const riscoMax=Math.abs(sl-entrada)*tam*qtd+corr;
+  const ganhoMax=Math.abs(sg-entrada)*tam*qtd-corr;
+  const cls=resTotal>=0?'pos':'neg';
+  const setV=(id,v,c)=>{const e=el(id);if(e){e.textContent=v;if(c)e.className='tm-val '+c}};
+  setV('res-unit',fmt(resUnit),cls);setV('res-total',fmt(resTotal),cls);
+  setV('ret-marg',fmtPct(retMarg),cls);setV('marg-total',fmt(margTotal));
+  const setR=(id,v,c)=>{const e=el(id);if(e){e.textContent=v;if(c)e.className='t-row-val '+c}};
+  setR('sl-calc',fmt(sl),'neg');setR('sg-calc',fmt(sg),'pos');
+  setR('risco-max',fmt(riscoMax),'neg');setR('ganho-max',fmt(ganhoMax),'pos');
+  setR('ganho-pct',fmtPct(ganhoPct));
+  updatePos();
+}
+
+function calcRisco(){
+  const cap=sv('capital')||50000,rPct=(sv('risco-pct')||2)/100;
+  const slPct=(sv('sl-pct-risco')||5)/100,entrada=sv('entrada-risco')||83.63;
+  const tam=sv('tam-risco')||450,margUnit=sv('margem')||3600;
+  const rReais=cap*rPct,rCont=entrada*slPct*tam;
+  const nCont=rCont>0?Math.floor(rReais/rCont):0;
+  const margEst=nCont*margUnit,pctCap=cap>0?margEst/cap:0;
+  const set=(id,v)=>{const e=el(id);if(e)e.textContent=v};
+  set('risco-reais',fmt(rReais));set('risco-por-cont',fmt(rCont));
+  set('num-contratos',nCont+' contrato'+(nCont!==1?'s':''));
+  set('marg-risco',fmt(margEst));set('pct-capital',fmtPct(pctCap));
+  const alav=el('alert-alav');if(alav)alav.style.display=pctCap>.3?'block':'none';
+  const vars=[-10,-5,-3,-1,1,3,5,10];
+  let html='<table class="cen-table"><thead><tr><th>Variação</th><th>Resultado</th><th>Ret. margem</th></tr></thead><tbody>';
+  vars.forEach(v=>{
+    const res=entrada*(v/100)*tam*nCont,ret=margEst>0?res/margEst:0;
+    const c=res>=0?'var(--green)':'#C0392B';
+    html+=`<tr><td>${v>0?'+':''}${v}%</td><td style="color:${c};font-weight:500">${fmt(res)}</td><td style="color:${c}">${fmtPct(ret)}</td></tr>`;
+  });
+  html+='</tbody></table>';
+  const ct=el('cenarios-table');if(ct)ct.innerHTML=html;
+}
+
+function calcSpread(){
+  const b3=sv('preco-b3')||83.63,cme=sv('preco-cme')||4.85;
+  const fx=sv('cambio')||5.70,bHist=sv('basis-hist')||2.50;
+  const cmeBrl=cme*fx*CME_F,basis=b3-cmeBrl,bvsH=basis-bHist;
+  const pct=Math.min(Math.max((basis/(bHist*3)+.5)*100,5),95);
+  const set=(id,v)=>{const e=el(id);if(e)e.textContent=v};
+  set('cme-brl',fmt(cmeBrl));set('dif-spread',fmt(b3-cmeBrl));
+  set('basis-atual',fmt(basis));set('basis-vs',(bvsH>=0?'+':'')+bvsH.toFixed(2)+' vs histórico');
+  const sinal=basis<bHist-1?'↗ Compra B3':basis>bHist+1?'↘ Venda B3':'⟶ Neutro';
+  const fc=basis<bHist-1?'var(--green)':basis>bHist+1?'#C0392B':'var(--gold)';
+  const ss=el('sinal-spread');if(ss){ss.textContent=sinal;ss.style.color=fc}
+  const sf=el('sg-fill');if(sf){sf.style.width=pct.toFixed(0)+'%';sf.style.background=basis<bHist-1?'var(--green-light)':basis>bHist+1?'#E05252':'var(--gold)'}
+}
+
+function calcCarry(){
+  const compra=sv('pc-compra')||68,qtd=sv('pc-qtd')||1000;
+  const arm=sv('pc-armazen')||.8,juros=(sv('pc-juros')||1)/100;
+  const prazo=sv('pc-prazo')||3,frete=sv('pc-frete')||2.5;
+  const cArm=arm*prazo,cFin=compra*(Math.pow(1+juros,prazo)-1);
+  const cTotal=cArm+cFin+frete,be=compra+cTotal;
+  const set=(id,v)=>{const e=el(id);if(e)e.textContent=v};
+  set('c-arm',fmt(cArm)+'/saca');set('c-fin',fmt(cFin)+'/saca');
+  set('c-fre',fmt(frete)+'/saca');set('c-total',fmt(cTotal)+'/saca');
+  set('breakeven',fmt(be));set('c-total-op',fmt(be*qtd));
+}
+
+function limpar(){
+  const defs={'calcComm':'CCM','posicao':'COMPRA','tam-cont':'450','qtd':'1','margem':'3600','corretagem':'0','entrada':'','saida':'','stop-pct':'5','gain-pct':'5'};
+  Object.entries(defs).forEach(([id,v])=>{const e=el(id);if(e)e.value=v});
+  if(el('unidade'))el('unidade').textContent='sacas';
+  if(el('sideComm'))el('sideComm').value='CCM';
+  ['res-unit','res-total','ret-marg','marg-total'].forEach(id=>{const e=el(id);if(e){e.textContent='—';e.className='tm-val'}});
+  ['sl-calc','sg-calc','risco-max','ganho-max','ganho-pct'].forEach(id=>{const e=el(id);if(e)e.textContent='—'});
+  updatePos();
+}
+
+function enviarContato(){
+  const nome=el('c-nome')?.value,email=el('c-email')?.value;
+  if(!nome||!email){alert('Preencha nome e e-mail.');return}
+  el('contact-ok').style.display='block';
+}
+
+
+});
+
+window.showTTab=showTTab;window.applyContract=applyContract;
+window.updatePos=updatePos;window.calcular=calcular;
+window.calcRisco=calcRisco;window.calcSpread=calcSpread;window.calcCarry=calcCarry;
+window.limpar=limpar;window.goSimStep=goSimStep;window.enviarContato=enviarContato;
+'use strict';
+
+function logout(){sessionStorage.removeItem('gc_user');GC.showLogin();}
+
+// ── CONTRACT DATA ─────────────────────────────────────
+const CONTRACTS = {
+  CCM: { name:'Milho', ticker:'CCM', venc:'JUL/26', unit:'R$/saca', size:450, margem:3600,
+    base:83.63, vol:12450, color:'#2D6A2D' },
+  BGI: { name:'Boi Gordo', ticker:'BGI', venc:'JUN/26', unit:'R$/arroba', size:330, margem:5000,
+    base:312.40, vol:8320, color:'#8B4513' },
+  ICF: { name:'Café', ticker:'ICF', venc:'MAI/26', unit:'R$/saca', size:100, margem:3000,
+    base:1245.00, vol:4180, color:'#5D3A1A' },
+  SJC: { name:'Soja', ticker:'SJC', venc:'MAR/26', unit:'R$/saca', size:450, margem:4500,
+    base:118.55, vol:9640, color:'#C8922A' },
+};
+
+let currentContract = 'CCM';
+let priceChartInst = null, cciChartInst = null, fullChartInst = null, cciChart2Inst = null;
+
+// ── GENERATE PRICE SERIES ─────────────────────────────
+function genSeries(base, n=60, trend=0.003, vol=0.015) {
+  const prices = [base];
+  for (let i=1; i<n; i++) {
+    const chg = (Math.random()-0.48) * vol + trend;
+    prices.push(Math.max(prices[i-1] * (1+chg), base*0.7));
+  }
+  return prices;
+}
+
+function movAvg(arr, n) {
+  return arr.map((_, i) => i < n-1 ? null : arr.slice(i-n+1,i+1).reduce((a,b)=>a+b,0)/n);
+}
+
+function calcCCI(prices, n=14) {
+  return prices.map((_, i) => {
+    if (i < n-1) return null;
+    const slice = prices.slice(i-n+1, i+1);
+    const tp = slice; // simplified: using close as typical price
+    const avg = tp.reduce((a,b)=>a+b,0)/n;
+    const md  = tp.reduce((a,b)=>a+Math.abs(b-avg),0)/n;
+    return md === 0 ? 0 : (prices[i]-avg)/(0.015*md);
+  });
+}
+
+function getLabels(n=60) {
+  const labels = [];
+  const now = new Date();
+  for (let i=n-1; i>=0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate()-i);
+    labels.push(d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}));
+  }
+  return labels;
+}
+
+// ── MARKET DATA ───────────────────────────────────────
+function getMarketData(ticker) {
+  const c = CONTRACTS[ticker];
+  const seed = ticker.charCodeAt(0) * 7 + ticker.charCodeAt(1);
+  const trend = [0.003, -0.002, 0.004, 0.001][seed % 4];
+  const prices = genSeries(c.base, 60, trend);
+  const mm9  = movAvg(prices, 9);
+  const mm21 = movAvg(prices, 21);
+  const cci  = calcCCI(prices, 14);
+  const last  = prices[prices.length-1];
+  const prev  = prices[prices.length-2];
+  const varPct = (last-prev)/prev*100;
+  const cciLast = cci[cci.length-1] || 0;
+  const mm9last  = mm9[mm9.length-1] || last;
+  const mm21last = mm21[mm21.length-1] || last;
+  return { prices, mm9, mm21, cci, last, varPct, cciLast, mm9last, mm21last };
+}
+
+// ── CCI INTERPRETATION ────────────────────────────────
+function getCCIInfo(val) {
+  if (val >= 300)  return { zone:'Exaustão extrema +300', label:'SOBRECOMPRA EXTREMA', cls:'indi-s-baixa', signal:'VENDA', sdesc:'CCI em exaustão acima de +300. Alta probabilidade de reversão.' };
+  if (val >= 200)  return { zone:'Exaustão +200', label:'SOBRECOMPRA SEVERA', cls:'indi-s-baixa', signal:'VENDA', sdesc:'CCI acima de +200. Mercado esticado, risco elevado de correção.' };
+  if (val >= 100)  return { zone:'Sobrecompra +100', label:'TENDÊNCIA DE ALTA', cls:'indi-s-alta', signal:'COMPRA', sdesc:'CCI acima de +100. Tendência de alta confirmada — monitorar exaustão.' };
+  if (val >= 0)    return { zone:'Zona neutra alta', label:'LEVEMENTE ALTISTA', cls:'indi-s-neutro', signal:'NEUTRO', sdesc:'CCI entre 0 e +100. Mercado sem definição clara — aguardar sinal.' };
+  if (val >= -100) return { zone:'Zona neutra baixa', label:'LEVEMENTE BAIXISTA', cls:'indi-s-neutro', signal:'NEUTRO', sdesc:'CCI entre -100 e 0. Pressão vendedora moderada — cautela.' };
+  if (val >= -200) return { zone:'Sobrevenda -100', label:'TENDÊNCIA DE BAIXA', cls:'indi-s-baixa', signal:'VENDA', sdesc:'CCI abaixo de -100. Tendência de baixa — potencial reversão futura.' };
+  if (val >= -300) return { zone:'Exaustão -200', label:'SOBREVENDA SEVERA', cls:'indi-s-alta', signal:'COMPRA', sdesc:'CCI abaixo de -200. Ativo muito barato — alta probabilidade de reversão.' };
+  return { zone:'Exaustão extrema -300', label:'SOBREVENDA EXTREMA', cls:'indi-s-alta', signal:'COMPRA', sdesc:'CCI abaixo de -300. Exaustão vendedora extrema — reversão iminente.' };
+}
+
+function getTrendInfo(mm9, mm21) {
+  if (mm9 > mm21*1.002) return { label:'ALTA', cls:'indi-s-alta' };
+  if (mm9 < mm21*0.998) return { label:'BAIXA', cls:'indi-s-baixa' };
+  return { label:'LATERAL', cls:'indi-s-neutro' };
+}
+
+function getConsolidatedSignal(cciInfo, trendInfo) {
+  if (cciInfo.signal==='COMPRA' && trendInfo.label==='ALTA')  return { signal:'COMPRA', cls:'signal-compra' };
+  if (cciInfo.signal==='VENDA'  && trendInfo.label==='BAIXA') return { signal:'VENDA',  cls:'signal-venda'  };
+  return { signal:'NEUTRO', cls:'signal-neutro' };
+}
+
+// ── UPDATE DASHBOARD ──────────────────────────────────
+function updateDashboard(ticker) {
+  const c  = CONTRACTS[ticker];
+  const md = getMarketData(ticker);
+  const cciInfo   = getCCIInfo(md.cciLast);
+  const trendInfo = getTrendInfo(md.mm9last, md.mm21last);
+  const consol    = getConsolidatedSignal(cciInfo, trendInfo);
+  const labels    = getLabels(60);
+
+  // subtitle
+  document.getElementById('dash-subtitle').textContent = `Visão geral · ${c.name} ${ticker}`;
+  document.getElementById('chart-contract-label').textContent = ticker;
+
+  // contract info sidebar
+  const tickerBarInput = document.getElementById('tickerBarInput');
+  const tickerDisplay  = tickerBarInput?.value || ticker;
+  document.getElementById('ci-ticker').textContent = tickerDisplay;
+  document.getElementById('ci-name').textContent   = c.name;
+  document.getElementById('ci-venc').textContent   = c.venc;
+  document.getElementById('ci-ult').textContent    = `${md.last.toFixed(2)} ${c.unit}`;
+  document.getElementById('ci-var').textContent    = `${md.varPct>=0?'+':''}${md.varPct.toFixed(2)}%`;
+  document.getElementById('ci-var').style.color    = md.varPct>=0?'var(--green)':'var(--red)';
+  document.getElementById('ci-vol').textContent    = c.vol.toLocaleString('pt-BR');
+  document.getElementById('ci-size').textContent   = `${c.size} ${c.unit.replace('R$/','')}`;
+  document.getElementById('ci-marg').textContent   = `R$ ${c.margem.toLocaleString('pt-BR')}`;
+  // chart label
+  document.getElementById('chart-contract-label').textContent = tickerDisplay;
+
+  // metric cards
+  setMetric('mc-preco', `${md.last.toFixed(2)}`, `${md.varPct>=0?'▲':'▼'} ${Math.abs(md.varPct).toFixed(2)}% hoje`, md.varPct>=0?'pos':'neg');
+  setMetric('mc-cci', md.cciLast.toFixed(1), cciInfo.zone, md.cciLast>=100?'pos':md.cciLast<=-100?'neg':'');
+  setMetric('mc-mm', `${trendInfo.label}`, `MM9 ${md.mm9last.toFixed(2)} / MM21 ${md.mm21last.toFixed(2)}`, trendInfo.label==='ALTA'?'pos':trendInfo.label==='BAIXA'?'neg':'');
+  setMetric('mc-signal', consol.signal, 'CCI + Médias Móveis', consol.signal==='COMPRA'?'pos':consol.signal==='VENDA'?'neg':'');
+
+  // CCI gauge
+  document.getElementById('cci-big').textContent  = md.cciLast.toFixed(1);
+  document.getElementById('cci-label').textContent = cciInfo.label;
+  document.getElementById('cci-zone').textContent  = cciInfo.zone;
+  const interpEl = document.getElementById('cci-interp');
+  interpEl.textContent  = cciInfo.label;
+  interpEl.className = 'indi-signal ' + cciInfo.cls;
+  // marker position: map -300..+300 to 0..100%
+  const markerPct = Math.min(Math.max((md.cciLast + 300) / 600 * 100, 2), 98);
+  document.getElementById('cci-marker').style.left = markerPct + '%';
+
+  // indicators
+  setIndi('ind-mm9', md.mm9last.toFixed(2));
+  setIndi('ind-mm21', md.mm21last.toFixed(2));
+  setIndiSignal('ind-tend', trendInfo.label, trendInfo.cls);
+  setIndi('ind-cci', md.cciLast.toFixed(1));
+  setIndiSignal('ind-cci-zona', cciInfo.zone.substring(0,20), cciInfo.cls);
+  setIndiSignal('ind-div', 'Sem divergência', 'indi-s-neutro');
+
+  // main signal
+  const sigEl = document.getElementById('main-signal');
+  sigEl.textContent = '⬤ ' + consol.signal;
+  sigEl.className = 'signal ' + consol.cls;
+  document.getElementById('signal-desc').textContent = cciInfo.sdesc;
+
+  // stops and targets
+  const sl = md.last * 0.95;
+  const t1 = md.last * 1.05;
+  const t2 = md.last * 1.10;
+  document.getElementById('sig-sl').textContent = `R$ ${sl.toFixed(2)}`;
+  document.getElementById('sig-t1').textContent = `R$ ${t1.toFixed(2)}`;
+  document.getElementById('sig-t2').textContent = `R$ ${t2.toFixed(2)}`;
+  document.getElementById('sig-rr').textContent = '1 : 2,0';
+
+  // análise técnica page
+  setIndi('det-cci', md.cciLast.toFixed(1));
+  setIndiSignal('det-zona', cciInfo.zone.substring(0,25), cciInfo.cls);
+  setIndi('det-mm9', md.mm9last.toFixed(2));
+  setIndi('det-mm21', md.mm21last.toFixed(2));
+  setIndiSignal('det-cross', md.mm9last>md.mm21last?'MM9 acima MM21':'MM9 abaixo MM21', md.mm9last>md.mm21last?'indi-s-alta':'indi-s-baixa');
+  setIndiSignal('det-tend', trendInfo.label, trendInfo.cls);
+  setIndiSignal('det-div', 'Sem divergência detectada', 'indi-s-neutro');
+  document.getElementById('det-conclusao').textContent =
+    `${c.name} (${ticker}) apresenta tendência de ${trendInfo.label.toLowerCase()} com CCI em ${cciInfo.label.toLowerCase()}. ` +
+    (consol.signal!=='NEUTRO' ? `Sinal consolidado de ${consol.signal} ativo.` : 'Aguardar confirmação de sinal.');
+
+  // draw charts
+  drawPriceChart(md, labels, c);
+  drawCCIChart(md, labels, 'cciChart');
+  drawFullChart(md, labels, c);
+  drawCCIChart(md, labels, 'cciChart2');
+
+  // report
+  buildReport(ticker, c, md, cciInfo, trendInfo, consol);
+
+  // indicators page
+  buildIndicatorsPage();
+}
+
+function setMetric(cardId, val, sub, cls) {
+  const valEl = document.getElementById(cardId+'-val');
+  const subEl = document.getElementById(cardId+'-sub');
+  if (valEl) { valEl.textContent = val; valEl.className = 'mc-val' + (cls?' '+cls:''); }
+  if (subEl)   subEl.textContent = sub;
+}
+function setIndi(id, val) { const e=document.getElementById(id); if(e) e.textContent=val; }
+function setIndiSignal(id, label, cls) {
+  const e=document.getElementById(id);
+  if(e){ e.textContent=label; e.className='indi-signal '+cls; }
+}
+
+// ── CHARTS ───────────────────────────────────────────
+const chartDefaults = {
+  responsive:true, maintainAspectRatio:false,
+  plugins:{ legend:{ labels:{ font:{size:11,family:'Inter'}, color:'#6B7A5C', boxWidth:14 }}},
+  scales:{ x:{ ticks:{ maxTicksLimit:10, font:{size:10}, color:'#9BAA8C' }, grid:{ color:'#E8F0DE' }},
+            y:{ ticks:{ font:{size:10,family:'JetBrains Mono'}, color:'#9BAA8C' }, grid:{ color:'#E8F0DE' }}}
+};
+
+function drawPriceChart(md, labels, c) {
+  const ctx = document.getElementById('priceChart');
+  if (!ctx) return;
+  if (priceChartInst) priceChartInst.destroy();
+  priceChartInst = new Chart(ctx, {
+    type:'line',
+    data:{ labels,
+      datasets:[
+        { label:'Preço', data:md.prices, borderColor:c.color, backgroundColor:c.color+'22', borderWidth:2, pointRadius:0, fill:true, tension:.35 },
+        { label:'MM9',  data:md.mm9,  borderColor:'#E67E22', borderWidth:1.5, pointRadius:0, borderDash:[4,2], tension:.35 },
+        { label:'MM21', data:md.mm21, borderColor:'#8E44AD', borderWidth:1.5, pointRadius:0, borderDash:[6,3], tension:.35 },
+      ]},
+    options:{ ...chartDefaults }
+  });
+}
+
+function drawCCIChart(md, labels, canvasId) {
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+  const inst = canvasId==='cciChart'?cciChartInst:cciChart2Inst;
+  if (inst) inst.destroy();
+  const cciColors = md.cci.map(v => v===null?'transparent':v>=100?'#27AE6088':v<=-100?'#C0392B88':'#C8922A88');
+  const newInst = new Chart(ctx, {
+    type:'bar',
+    data:{ labels,
+      datasets:[
+        { label:'CCI', data:md.cci, backgroundColor:cciColors, borderWidth:0 },
+        { label:'+100', data:Array(60).fill(100), borderColor:'#27AE60', borderWidth:1, borderDash:[4,3], type:'line', pointRadius:0 },
+        { label:'-100', data:Array(60).fill(-100), borderColor:'#C0392B', borderWidth:1, borderDash:[4,3], type:'line', pointRadius:0 },
+        { label:'Zero', data:Array(60).fill(0), borderColor:'#9BAA8C', borderWidth:1, type:'line', pointRadius:0 },
+      ]},
+    options:{ ...chartDefaults, scales:{ ...chartDefaults.scales, y:{ ...chartDefaults.scales.y, min:-350, max:350 }}}
+  });
+  if (canvasId==='cciChart') cciChartInst=newInst; else cciChart2Inst=newInst;
+}
+
+function drawFullChart(md, labels, c) {
+  const ctx = document.getElementById('fullChart');
+  if (!ctx) return;
+  if (fullChartInst) fullChartInst.destroy();
+  fullChartInst = new Chart(ctx, {
+    type:'line',
+    data:{ labels,
+      datasets:[
+        { label:'Preço', data:md.prices, borderColor:c.color, backgroundColor:c.color+'18', borderWidth:2.5, pointRadius:0, fill:true, tension:.3 },
+        { label:'MM9',  data:md.mm9,  borderColor:'#E67E22', borderWidth:2, pointRadius:0, borderDash:[5,3], tension:.3 },
+        { label:'MM21', data:md.mm21, borderColor:'#8E44AD', borderWidth:2, pointRadius:0, borderDash:[8,4], tension:.3 },
+      ]},
+    options:{ ...chartDefaults }
+  });
+}
+
+// ── INDICATORS PAGE ───────────────────────────────────
+function buildIndicatorsPage() {
+  const cardsEl = document.getElementById('indi-cards');
+  const tbodyEl = document.getElementById('sinais-tbody');
+  if (!cardsEl || !tbodyEl) return;
+  cardsEl.innerHTML = '';
+  tbodyEl.innerHTML = '';
+  Object.entries(CONTRACTS).forEach(([ticker, c]) => {
+    const md = getMarketData(ticker);
+    const cci   = getCCIInfo(md.cciLast);
+    const trend = getTrendInfo(md.mm9last, md.mm21last);
+    const cons  = getConsolidatedSignal(cci, trend);
+    const sigCls = cons.signal==='COMPRA'?'pos':cons.signal==='VENDA'?'neg':'';
+    const varCls = md.varPct>=0?'pos':'neg';
+
+    cardsEl.innerHTML += `
+      <div class="metric-card ${sigCls==='pos'?'green':sigCls==='neg'?'red':''}">
+        <div class="mc-label">${c.name} · ${ticker}</div>
+        <div class="mc-val ${varCls}">${md.last.toFixed(2)}</div>
+        <div class="mc-sub">${md.varPct>=0?'▲':'▼'} ${Math.abs(md.varPct).toFixed(2)}% · CCI ${md.cciLast.toFixed(0)}</div>
+        <div style="margin-top:.5rem"><span class="signal ${cons.cls}" style="font-size:11px;padding:3px 10px">${cons.signal}</span></div>
+      </div>`;
+
+    tbodyEl.innerHTML += `
+      <tr>
+        <td><strong>${ticker}</strong> — ${c.name}</td>
+        <td class="td-mono">${md.last.toFixed(2)}</td>
+        <td class="td-mono ${varCls}">${md.varPct>=0?'+':''}${md.varPct.toFixed(2)}%</td>
+        <td class="td-mono">${md.mm9last.toFixed(2)}</td>
+        <td class="td-mono">${md.mm21last.toFixed(2)}</td>
+        <td><span class="indi-signal ${trend.cls}">${trend.label}</span></td>
+        <td class="td-mono">${md.cciLast.toFixed(1)}</td>
+        <td><span class="indi-signal ${cci.cls}">${cci.zone.substring(0,16)}</span></td>
+        <td><span class="signal ${cons.cls}" style="font-size:11px;padding:3px 10px">${cons.signal}</span></td>
+      </tr>`;
+  });
+}
+
+// ── REPORT ────────────────────────────────────────────
+function buildReport(ticker, c, md, cciInfo, trendInfo, consol) {
+  const rc = document.getElementById('report-content');
+  if (!rc) return;
+  const now = new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+  const sl = (md.last*0.95).toFixed(2);
+  const t1 = (md.last*1.05).toFixed(2);
+  const t2 = (md.last*1.10).toFixed(2);
+
+  rc.innerHTML = `
+    <div class="report-header">
+      <div class="report-title">Relatório de Posição — ${c.name} (${ticker})</div>
+      <div class="report-meta">
+        <span>📅 ${now}</span>
+        <span>📊 Vencimento: ${c.venc}</span>
+        <span>💰 Preço: ${md.last.toFixed(2)} ${c.unit}</span>
+        <span>🎯 Sinal: ${consol.signal}</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1rem">
+      <div class="card-title">Resumo executivo</div>
+      <div class="report-justification">
+        <div class="rj-label">Justificativa de posição</div>
+        <div class="rj-text">
+          O contrato de ${c.name} (${ticker}) com vencimento em ${c.venc} apresenta atualmente 
+          tendência de <strong>${trendInfo.label.toLowerCase()}</strong> confirmada pelo cruzamento das médias móveis 
+          (MM9: ${md.mm9last.toFixed(2)} / MM21: ${md.mm21last.toFixed(2)}). O indicador CCI (14 períodos) 
+          marca ${md.cciLast.toFixed(1)}, posicionado na zona de <strong>${cciInfo.zone.toLowerCase()}</strong>, 
+          indicando ${cciInfo.sdesc.toLowerCase()} Com base na confluência desses indicadores, 
+          o sinal consolidado é de <strong>${consol.signal}</strong>.
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="card report-section">
+        <h4>📐 Análise de Médias Móveis</h4>
+        <p>As médias móveis simples de 9 e 21 períodos são utilizadas para identificar e confirmar a tendência predominante do mercado.</p>
+        <ul class="report-bullets">
+          <li>MM9 (curta): <strong>${md.mm9last.toFixed(2)}</strong></li>
+          <li>MM21 (longa): <strong>${md.mm21last.toFixed(2)}</strong></li>
+          <li>Posição relativa: MM9 ${md.mm9last>md.mm21last?'ACIMA':'ABAIXO'} da MM21</li>
+          <li>Tendência: <strong>${trendInfo.label}</strong></li>
+          <li>${md.mm9last>md.mm21last?'Cruzamento altista confirmado — suporte nas médias.':'Cruzamento baixista — resistência nas médias.'}</li>
+        </ul>
+      </div>
+      <div class="card report-section">
+        <h4>🔬 Análise CCI (14 períodos)</h4>
+        <p>O CCI mede o afastamento do preço em relação à média, sinalizando sobrecompra, sobrevenda e reversões.</p>
+        <ul class="report-bullets">
+          <li>CCI atual: <strong>${md.cciLast.toFixed(1)}</strong></li>
+          <li>Zona: <strong>${cciInfo.zone}</strong></li>
+          <li>${cciInfo.sdesc}</li>
+          <li>${Math.abs(md.cciLast)>200?'Nível de exaustão — risco elevado de reversão.':Math.abs(md.cciLast)>100?'Tendência confirmada pelo oscilador.':'CCI em zona neutra — aguardar confirmação.'}</li>
+        </ul>
+      </div>
+      <div class="card report-section">
+        <h4>🎯 Parâmetros de Operação</h4>
+        <p>Níveis operacionais calculados com base na análise técnica e gestão de risco disciplinada.</p>
+        <ul class="report-bullets">
+          <li>Entrada sugerida: <strong>${md.last.toFixed(2)}</strong></li>
+          <li>Stop Loss: <strong>R$ ${sl}</strong> (-5%)</li>
+          <li>Alvo 1: <strong>R$ ${t1}</strong> (+5%)</li>
+          <li>Alvo 2: <strong>R$ ${t2}</strong> (+10%)</li>
+          <li>Relação Risco/Retorno: <strong>1:2</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card report-section">
+      <h4>🌍 Contexto Macroeconômico e Fundamentos</h4>
+      <p>A análise técnica é complementada pela leitura macroeconômica e dos fundamentos do agro, liderada por especialista em commodities agrícolas com integração entre mercado físico e financeiro.</p>
+      <ul class="report-bullets">
+        <li>Taxa de câmbio USD/BRL como driver principal de exportações e precificação</li>
+        <li>Safra brasileira e relatórios CONAB/USDA como balizadores de oferta</li>
+        <li>Demanda da China e política de estoques internacionais</li>
+        <li>Spread B3 × CME para identificar oportunidades de basis</li>
+        <li>Custo logístico (frete, armazenagem) impactando preço interno</li>
+      </ul>
+    </div>
+
+    <div class="card" style="background:var(--surface2)">
+      <div style="font-size:12px;color:var(--text-hint);line-height:1.7">
+        <strong>Aviso importante:</strong> Este relatório foi gerado pela plataforma GrãoConnecta com base em dados simulados e indicadores técnicos automatizados. 
+        As análises e sinais apresentados não constituem recomendação de investimento. 
+        A tomada de decisão final é de responsabilidade exclusiva do trader/analista responsável. 
+        Operações em mercados futuros envolvem riscos significativos de perda de capital.
+      </div>
+    </div>`;
+}
+
+// ── HISTORY DATA ──────────────────────────────────────
+const HIST_DATA = [
+  { date:'14/04/26',contract:'CCM',dir:'COMPRA',entry:82.10,exit:85.40,qty:2,result:2970,status:'Encerrada',signal:'CCI + MM'},
+  { date:'10/04/26',contract:'BGI',dir:'VENDA', entry:315.80,exit:310.20,qty:1,result:1848,status:'Encerrada',signal:'CCI -100'},
+  { date:'07/04/26',contract:'ICF',dir:'COMPRA',entry:1210.00,exit:null,qty:1,result:null,status:'Aberta',signal:'MM9>MM21'},
+  { date:'03/04/26',contract:'CCM',dir:'COMPRA',entry:80.50,exit:78.20,qty:2,result:-2025,status:'Encerrada',signal:'MM cruzam.'},
+  { date:'28/03/26',contract:'SJC',dir:'VENDA', entry:121.30,exit:117.80,qty:3,result:4725,status:'Encerrada',signal:'CCI +200'},
+  { date:'24/03/26',contract:'BGI',dir:'COMPRA',entry:308.40,exit:314.60,qty:1,result:2046,status:'Encerrada',signal:'CCI -150'},
+  { date:'18/03/26',contract:'CCM',dir:'COMPRA',entry:79.80,exit:83.10,qty:2,result:2970,status:'Encerrada',signal:'MM9>MM21'},
+  { date:'12/03/26',contract:'ICF',dir:'VENDA', entry:1270.00,exit:1245.00,qty:1,result:2500,status:'Encerrada',signal:'CCI +250'},
+];
+
+function renderHistory(data) {
+  const tbody = document.getElementById('hist-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = data.map(op => {
+    const res = op.result;
+    const resCls = res===null?'':res>=0?'td-pos':'td-neg';
+    const resStr = res===null?'Em aberto':`${res>=0?'+':''}R$ ${res.toLocaleString('pt-BR')}`;
+    const exitStr = op.exit===null?'—':op.exit.toFixed(2);
+    return `<tr>
+      <td>${op.date}</td>
+      <td><strong>${op.contract}</strong></td>
+      <td><span class="signal ${op.dir==='COMPRA'?'signal-compra':'signal-venda'}" style="font-size:11px;padding:2px 8px">${op.dir}</span></td>
+      <td class="td-mono">${op.entry.toFixed(2)}</td>
+      <td class="td-mono">${exitStr}</td>
+      <td class="td-mono">${op.qty}</td>
+      <td class="td-mono ${resCls}">${resStr}</td>
+      <td><span class="indi-signal ${op.status==='Aberta'?'indi-s-alta':'indi-s-neutro'}">${op.status}</span></td>
+      <td style="font-size:12px;color:var(--text-muted)">${op.signal}</td>
+    </tr>`;
+  }).join('');
+}
+
+function filterHist(type, btn) {
+  document.querySelectorAll('.filter-badge').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const data = type==='open'?HIST_DATA.filter(d=>d.status==='Aberta'):
+               type==='closed'?HIST_DATA.filter(d=>d.status==='Encerrada'):HIST_DATA;
+  renderHistory(data);
+}
+
+// ── RISK PANEL ────────────────────────────────────────
+function calcRiskPanel() {
+  const cap   = parseFloat(document.getElementById('r-capital')?.value)||50000;
+  const rPct  = (parseFloat(document.getElementById('r-riskpct')?.value)||2)/100;
+  const slPct = (parseFloat(document.getElementById('r-sl')?.value)||5)/100;
+  const entry = parseFloat(document.getElementById('r-entry')?.value)||83.63;
+  const size  = 450; const margUnit = 3600;
+
+  const rReais = cap*rPct;
+  const rCont  = entry*slPct*size;
+  const nConts = rCont>0?Math.floor(rReais/rCont):0;
+  const marg   = nConts*margUnit;
+  const pct    = cap>0?marg/cap:0;
+  const sl     = entry*(1-slPct);
+  const alvo   = entry*(1+slPct*2);
+
+  const fmt = v=>'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const set = (id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
+  set('rp-rreais', fmt(rReais));
+  set('rp-rcont',  fmt(rCont));
+  set('rp-nconts', nConts+' contrato'+(nConts!==1?'s':''));
+  set('rp-marg',   fmt(marg));
+  set('rp-pct',    (pct*100).toFixed(1)+'%');
+  set('rp-sl',     fmt(sl));
+  set('rp-alvo',   fmt(alvo));
+  const alav = document.getElementById('rp-alav');
+  if(alav) alav.style.display=pct>.3?'block':'none';
+}
+
+// ── PAGE NAVIGATION ───────────────────────────────────
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.snav').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name)?.classList.add('active');
+  document.querySelectorAll(`.snav[data-page="${name}"]`).forEach(b=>b.classList.add('active'));
+  if (name==='historico') renderHistory(HIST_DATA);
+  if (name==='risco') calcRiskPanel();
+  if (name==='indicadores') buildIndicatorsPage();
+}
+
+// ── TICKER PARSING ────────────────────────────────────
+// Maps root tickers to commodity keys
+const TICKER_MAP = {
+  CCM:['CCM'], BGI:['BGI'], ICF:['ICF'], SJC:['SJC'],
+  // Accept full contract codes e.g. CCMN26, CCMQ26, BGIQ26, ICFK26, SJCH26
+};
+const MONTH_CODES = {F:'JAN',G:'FEV',H:'MAR',J:'ABR',K:'MAI',M:'JUN',N:'JUL',Q:'AGO',U:'SET',V:'OUT',X:'NOV',Z:'DEZ'};
+
+function parseTicker(raw) {
+  const t = raw.toUpperCase().trim();
+  // Direct match: CCM, BGI, ICF, SJC
+  if (CONTRACTS[t]) return { key: t, venc: null };
+  // Full code: 3-letter root + 1-letter month + 2-digit year (e.g. CCMN26)
+  const m = t.match(/^(CCM|BGI|ICF|SJC)([FGHJKMNQUVXZ])(\d{2})$/);
+  if (m) {
+    const month = MONTH_CODES[m[2]] || m[2];
+    return { key: m[1], venc: `${month}/${m[3]}` };
+  }
+  return null;
+}
+
+function analisarTicker() {
+  // Get ticker from bar input (dashboard) or sidebar input
+  const barInput  = document.getElementById('tickerBarInput');
+  const sideInput = document.getElementById('tickerInput');
+  const raw = (barInput?.value || sideInput?.value || '').trim();
+
+  // Manual overrides
+  const manualPrice = parseFloat(document.getElementById('manualPrice')?.value ||
+                                  document.getElementById('barManualPrice')?.value) || null;
+  const manualVenc  = (document.getElementById('manualVenc')?.value ||
+                       document.getElementById('barManualVenc')?.value || '').trim();
+
+  const errEl = document.getElementById('ticker-error');
+
+  if (!raw) {
+    if (errEl) { errEl.style.display='block'; errEl.textContent='Digite o ticker do contrato.'; }
+    return;
+  }
+
+  const parsed = parseTicker(raw);
+  if (!parsed) {
+    if (errEl) { errEl.style.display='block'; errEl.textContent=`Ticker "${raw}" não reconhecido. Use CCM, BGI, ICF ou SJC (ex: CCMN26).`; }
+    return;
+  }
+  if (errEl) errEl.style.display = 'none';
+
+  // Apply manual overrides to CONTRACTS temporarily
+  if (manualPrice && manualPrice > 0) CONTRACTS[parsed.key].base = manualPrice;
+  if (manualVenc)                      CONTRACTS[parsed.key].venc = manualVenc;
+  else if (parsed.venc)                CONTRACTS[parsed.key].venc = parsed.venc;
+
+  // Sync inputs
+  if (barInput)  barInput.value  = raw;
+  if (sideInput) sideInput.value = raw;
+
+  currentContract = parsed.key;
+  updateQuickPickActive(parsed.key);
+  updateDashboard(parsed.key);
+  showPage('dashboard');
+}
+
+function quickPick(key) {
+  currentContract = key;
+  const barInput  = document.getElementById('tickerBarInput');
+  const sideInput = document.getElementById('tickerInput');
+  if (barInput)  barInput.value  = key;
+  if (sideInput) sideInput.value = key;
+  // Clear manual overrides
+  const mp = document.getElementById('manualPrice'); if (mp) mp.value = '';
+  const mv = document.getElementById('manualVenc');  if (mv) mv.value = '';
+  const bmp = document.getElementById('barManualPrice'); if (bmp) bmp.value = '';
+  const bmv = document.getElementById('barManualVenc');  if (bmv) bmv.value = '';
+  const errEl = document.getElementById('ticker-error');
+  if (errEl) errEl.style.display = 'none';
+  updateQuickPickActive(key);
+  updateDashboard(key);
+}
+
+function updateQuickPickActive(key) {
+  // Sidebar quick picks
+  ['CCM','BGI','ICF','SJC'].forEach(k => {
+    document.getElementById('qp-'+k)?.classList.toggle('active', k===key);
+    document.getElementById('tqb-'+k)?.classList.toggle('active', k===key);
+  });
+}
+
+function changeContract() {
+  const sel = document.getElementById('contractSel');
+  if (sel) quickPick(sel.value);
+}
+
+// ── INIT ──────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded',function(){
+  if(sessionStorage.getItem('gc_user')){GC.showPlatform();}else{GC.showSite();}
+});
+window.GC=GC;window.doLogin=doLogin;window.togglePass=togglePass;window.logout=logout;
+window.showPage=showPage;window.changeContract=changeContract;window.filterHist=filterHist;
+window.calcRiskPanel=calcRiskPanel;window.analisarTicker=analisarTicker;window.quickPick=quickPick;
+window.goSimStep=goSimStep;window.enviarContato=enviarContato;
+if(typeof calcular!=='undefined')window.calcular=calcular;
+if(typeof calcSpread!=='undefined')window.calcSpread=calcSpread;
+if(typeof calcCarry!=='undefined')window.calcCarry=calcCarry;
+if(typeof updatePos!=='undefined')window.updatePos=updatePos;
+if(typeof limpar!=='undefined')window.limpar=limpar;
+if(typeof showAppTab!=='undefined')window.showAppTab=showAppTab;
+if(typeof updateContractFromCalc!=='undefined')window.updateContractFromCalc=updateContractFromCalc;
+</script>
+</body>
+</html>
